@@ -43,4 +43,17 @@ export const {
     clearFilters,
 } = jobsSlice.actions;
 
+// Selectors
+export const selectFilters = (state) => state.jobs.filters;
+export const selectSearchFilter = (state) => state.jobs.filters.search;
+export const selectCategoryFilter = (state) => state.jobs.filters.category;
+export const selectLocationFilter = (state) => state.jobs.filters.location;
+export const selectJobTypeFilter = (state) => state.jobs.filters.jobType;
+export const selectActiveFilters = (state) => {
+    const filters = state.jobs.filters;
+    return Object.entries(filters)
+        .filter(([, value]) => value !== '')
+        .reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {});
+};
+
 export default jobsSlice.reducer;
