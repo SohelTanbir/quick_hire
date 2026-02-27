@@ -1,8 +1,5 @@
-'use client';
-
 import { Clash_Display, Epilogue, Inter } from 'next/font/google';
-import { Provider } from 'react-redux';
-import store from '@/store';
+import { Providers } from './providers';
 import './globals.css';
 
 const clashDisplay = Clash_Display({
@@ -44,9 +41,9 @@ export default function RootLayout({ children }) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </head>
       <body className="antialiased">
-        <Provider store={store}>
+        <Providers>
           {children}
-        </Provider>
+        </Providers>
       </body>
     </html>
   );
