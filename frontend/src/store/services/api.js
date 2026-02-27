@@ -23,7 +23,7 @@ const baseQueryWithErrorHandling = async (args, api, extraOptions) => {
 
     if (result.error) {
         console.error('API Error:', result.error);
-        
+
         // Handle specific error types
         if (result.error.status === 401) {
             // Unauthorized - could trigger logout
