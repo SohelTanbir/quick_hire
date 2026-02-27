@@ -1,107 +1,175 @@
 'use client';
 
+import { useState } from 'react';
 import Link from 'next/link';
-import { FiGithub, FiLinkedin, FiTwitter } from 'react-icons/fi';
+import { FiFacebook, FiInstagram, FiLinkedin, FiTwitter, FiDribbble } from 'react-icons/fi';
 
 export default function Footer() {
-    const currentYear = new Date().getFullYear();
+    const [email, setEmail] = useState('');
+
+    const handleSubscribe = (e) => {
+        e.preventDefault();
+        // Handle subscription logic here
+        console.log('Subscribe email:', email);
+        setEmail('');
+    };
 
     return (
-        <footer className="bg-gray-900 dark:bg-black text-white py-12 border-t border-gray-800">
+        <footer className="bg-[#1F2937] text-white py-16">
             <div className="container mx-auto px-4">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
-                    {/* Brand */}
+                {/* Main Footer Content */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12 mb-12">
+                    {/* Brand Column */}
                     <div className="space-y-4">
                         <Link href="/" className="flex items-center gap-2 w-fit">
-                            <div className="w-10 h-10 bg-gradient-to-br from-primary-500 to-primary-700 rounded-lg flex items-center justify-center">
-                                <span className="text-white font-clash font-bold text-lg">Q</span>
+                            <div className="w-10 h-10 bg-primary-600 rounded-lg flex items-center justify-center">
+                                <span className="text-white font-bold text-xl">Q</span>
                             </div>
-                            <span className="font-clash font-bold text-lg">QuickHire</span>
+                            <span className="font-bold text-xl text-white">QuickHire</span>
                         </Link>
-                        <p className="text-gray-400 text-sm">
-                            Discover and apply to your next opportunity with ease.
+                        <p className="text-gray-300 text-sm leading-relaxed pr-4">
+                            Great platform for the job seeker that searching for new career heights and passionate about startups.
                         </p>
                     </div>
 
-                    {/* Links */}
-                    <div className="space-y-3">
-                        <h4 className="font-epilogue font-semibold text-white">Quick Links</h4>
-                        <ul className="space-y-2 text-gray-400 text-sm">
+                    {/* About Column */}
+                    <div className="space-y-4">
+                        <h4 className="font-semibold text-white text-base mb-5">About</h4>
+                        <ul className="space-y-3">
                             <li>
-                                <Link href="/" className="hover:text-primary-400 transition">
-                                    Browse Jobs
+                                <Link href="/companies" className="text-gray-300 text-sm hover:text-primary-400 transition">
+                                    Companies
                                 </Link>
                             </li>
                             <li>
-                                <Link href="/admin" className="hover:text-primary-400 transition">
-                                    Admin Panel
+                                <Link href="/pricing" className="text-gray-300 text-sm hover:text-primary-400 transition">
+                                    Pricing
                                 </Link>
                             </li>
                             <li>
-                                <a
-                                    href="https://github.com"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="hover:text-primary-400 transition"
-                                >
-                                    GitHub Repository
-                                </a>
+                                <Link href="/terms" className="text-gray-300 text-sm hover:text-primary-400 transition">
+                                    Terms
+                                </Link>
+                            </li>
+                            <li>
+                                <Link href="/advice" className="text-gray-300 text-sm hover:text-primary-400 transition">
+                                    Advice
+                                </Link>
+                            </li>
+                            <li>
+                                <Link href="/privacy" className="text-gray-300 text-sm hover:text-primary-400 transition">
+                                    Privacy Policy
+                                </Link>
                             </li>
                         </ul>
                     </div>
 
-                    {/* Social Links */}
-                    <div className="space-y-3">
-                        <h4 className="font-epilogue font-semibold text-white">Follow Us</h4>
-                        <div className="flex gap-4">
-                            <a
-                                href="https://github.com"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-gray-400 hover:text-primary-400 transition"
-                                aria-label="GitHub"
+                    {/* Resources Column */}
+                    <div className="space-y-4">
+                        <h4 className="font-semibold text-white text-base mb-5">Resources</h4>
+                        <ul className="space-y-3">
+                            <li>
+                                <Link href="/help" className="text-gray-300 text-sm hover:text-primary-400 transition">
+                                    Help Docs
+                                </Link>
+                            </li>
+                            <li>
+                                <Link href="/guide" className="text-gray-300 text-sm hover:text-primary-400 transition">
+                                    Guide
+                                </Link>
+                            </li>
+                            <li>
+                                <Link href="/updates" className="text-gray-300 text-sm hover:text-primary-400 transition">
+                                    Updates
+                                </Link>
+                            </li>
+                            <li>
+                                <Link href="/contact" className="text-gray-300 text-sm hover:text-primary-400 transition">
+                                    Contact Us
+                                </Link>
+                            </li>
+                        </ul>
+                    </div>
+
+                    {/* Newsletter Column */}
+                    <div className="space-y-4">
+                        <h4 className="font-semibold text-white text-base mb-5">Get job notifications</h4>
+                        <p className="text-gray-300 text-sm mb-4">
+                            The latest job news, articles, sent to your inbox weekly.
+                        </p>
+                        <form onSubmit={handleSubscribe} className="space-y-3">
+                            <input
+                                type="email"
+                                placeholder="Email Address"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                required
+                                className="w-full px-4 py-2.5 bg-white/10 border border-gray-600 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent text-sm"
+                            />
+                            <button
+                                type="submit"
+                                className="w-full bg-primary-600 hover:bg-primary-700 text-white font-medium py-2.5 px-4 rounded-md transition-colors text-sm"
                             >
-                                <FiGithub size={20} />
-                            </a>
-                            <a
-                                href="https://linkedin.com"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-gray-400 hover:text-primary-400 transition"
-                                aria-label="LinkedIn"
-                            >
-                                <FiLinkedin size={20} />
-                            </a>
-                            <a
-                                href="https://twitter.com"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-gray-400 hover:text-primary-400 transition"
-                                aria-label="Twitter"
-                            >
-                                <FiTwitter size={20} />
-                            </a>
-                        </div>
+                                Subscribe
+                            </button>
+                        </form>
                     </div>
                 </div>
 
                 {/* Divider */}
-                <div className="border-t border-gray-800 pt-8">
-                    <div className="flex flex-col md:flex-row items-center justify-between">
-                        <p className="text-gray-400 text-sm">
-                            &copy; {currentYear} QuickHire. All rights reserved.
-                        </p>
-                        <div className="flex gap-6 mt-4 md:mt-0 text-gray-400 text-sm">
-                            <a href="#" className="hover:text-primary-400 transition">
-                                Privacy Policy
-                            </a>
-                            <a href="#" className="hover:text-primary-400 transition">
-                                Terms of Service
-                            </a>
-                            <a href="#" className="hover:text-primary-400 transition">
-                                Contact
-                            </a>
-                        </div>
+                <div className="border-t border-gray-700"></div>
+
+                {/* Bottom Footer */}
+                <div className="flex flex-col md:flex-row items-center justify-between pt-8 gap-4">
+                    <p className="text-gray-400 text-sm">
+                        2021 © QuickHire. All rights reserved.
+                    </p>
+                    <div className="flex gap-4">
+                        <a
+                            href="https://facebook.com"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-gray-400 hover:text-primary-400 transition"
+                            aria-label="Facebook"
+                        >
+                            <FiFacebook size={18} />
+                        </a>
+                        <a
+                            href="https://instagram.com"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-gray-400 hover:text-primary-400 transition"
+                            aria-label="Instagram"
+                        >
+                            <FiInstagram size={18} />
+                        </a>
+                        <a
+                            href="https://dribbble.com"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-gray-400 hover:text-primary-400 transition"
+                            aria-label="Dribbble"
+                        >
+                            <FiDribbble size={18} />
+                        </a>
+                        <a
+                            href="https://linkedin.com"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-gray-400 hover:text-primary-400 transition"
+                            aria-label="LinkedIn"
+                        >
+                            <FiLinkedin size={18} />
+                        </a>
+                        <a
+                            href="https://twitter.com"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-gray-400 hover:text-primary-400 transition"
+                            aria-label="Twitter"
+                        >
+                            <FiTwitter size={18} />
+                        </a>
                     </div>
                 </div>
             </div>

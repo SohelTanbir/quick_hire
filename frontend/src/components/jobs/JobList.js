@@ -17,7 +17,7 @@ export default function JobList({ jobs, loading }) {
     }
 
     return (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-4">
+        <div className="space-y-4">
             {jobs.map((job) => (
                 <JobCard key={job._id} job={job} />
             ))}
