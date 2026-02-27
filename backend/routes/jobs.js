@@ -1,9 +1,9 @@
 const express = require('express');
 const {
-  getAllJobs,
-  getJobById,
-  createJob,
-  deleteJob,
+    getAllJobs,
+    getJobById,
+    createJob,
+    deleteJob,
 } = require('../controllers/jobController');
 
 const router = express.Router();

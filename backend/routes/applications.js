@@ -1,8 +1,8 @@
 const express = require('express');
 const {
-  submitApplication,
-  getApplicationsByJobId,
-  getAllApplications,
+    submitApplication,
+    getApplicationsByJobId,
+    getAllApplications,
 } = require('../controllers/applicationController');
 
 const router = express.Router();
