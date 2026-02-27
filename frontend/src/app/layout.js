@@ -1,27 +1,5 @@
-import { Clash_Display, Epilogue, Inter } from 'next/font/google';
 import { Providers } from './providers';
 import './globals.css';
-
-const clashDisplay = Clash_Display({
-  variable: '--font-clash',
-  subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
-  display: 'swap',
-});
-
-const epilogue = Epilogue({
-  variable: '--font-epilogue',
-  subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
-  display: 'swap',
-});
-
-const inter = Inter({
-  variable: '--font-inter',
-  subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
-  display: 'swap',
-});
 
 export const metadata = {
   title: 'QuickHire - Job Board',
@@ -32,10 +10,7 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html
-      lang="en"
-      className={`${clashDisplay.variable} ${epilogue.variable} ${inter.variable}`}
-    >
+    <html lang="en">
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />

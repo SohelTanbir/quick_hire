@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Clash+Display:wght@400;500;600;700&family=Epilogue:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Epilogue:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap");
 
 @import "tailwindcss";
 
@@ -42,7 +42,7 @@
     --color-info: #3b82f6;
 
     /* Font Families */
-    --font-clash: "Clash Display", sans-serif;
+    --font-clash: "Poppins", sans-serif;
     --font-epilogue: "Epilogue", sans-serif;
     --font-inter: "Inter", sans-serif;
 
