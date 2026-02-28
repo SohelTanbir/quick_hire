@@ -92,7 +92,7 @@ export default function CategoriesSection() {
                     return (
                         <Link
                             key={index}
-                            href={`/?category=${encodeURIComponent(category.name)}`}
+                            href={`/jobs?category=${encodeURIComponent(category.name)}`}
                             className={`bg-white rounded-xl p-6 border ${category.borderColor} hover:shadow-xl transition-all duration-300 group hover:-translate-y-1`}
                         >
                             <div className={`inline-flex items-center justify-center w-12 h-12 rounded-lg ${category.bgColor} mb-4 group-hover:scale-110 transition-transform`}>

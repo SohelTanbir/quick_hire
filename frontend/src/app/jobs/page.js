@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import Header from '@/components/common/Header';
 import Footer from '@/components/common/Footer';
@@ -10,6 +11,7 @@ import { useGetJobsQuery } from '@/store/services/api';
 import { FiSearch, FiSliders, FiX } from 'react-icons/fi';
 
 export default function JobsPage() {
+    const searchParams = useSearchParams();
     const [showFilters, setShowFilters] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('');
@@ -18,6 +20,23 @@ export default function JobsPage() {
 
     const { data: jobsData, isLoading } = useGetJobsQuery();
     const jobs = Array.isArray(jobsData) ? jobsData : Array.isArray(jobsData?.jobs) ? jobsData.jobs : [];
+
+    // Read URL parameters on mount
+    useEffect(() => {
+        const categoryParam = searchParams.get('category');
+        const searchParam = searchParams.get('search');
+        const locationParam = searchParams.get('location');
+        
+        if (categoryParam) {
+            setSelectedCategory(categoryParam);
+            setShowFilters(true);
+        }
+        if (searchParam) setSearchQuery(searchParam);
+        if (locationParam) {
+            setSelectedLocation(locationParam);
+            setShowFilters(true);
+        }
+    }, [searchParams]);
 
     const categories = ['Development', 'Design', 'Marketing', 'Finance', 'Sales', 'Product'];
     const jobTypes = ['Full time', 'Part time', 'Contract', 'Freelance'];

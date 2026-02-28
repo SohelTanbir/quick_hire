@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useMemo } from 'react';
+import { useRouter } from 'next/navigation';
 import { useDispatch, useSelector } from 'react-redux';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -19,9 +20,11 @@ import { useGetJobsQuery } from '@/store/services/api';
 import { FiArrowRight } from 'react-icons/fi';
 
 export default function Home() {
+  const router = useRouter();
   const dispatch = useDispatch();
   const filters = useSelector(selectFilters);
   const [localSearch, setLocalSearch] = useState('');
+  const [localLocation, setLocalLocation] = useState('');
 
   // Fetch jobs from API
   const { data: jobsData, isLoading, error } = useGetJobsQuery();
@@ -104,10 +107,20 @@ export default function Home() {
                       <input
                         type="text"
                         placeholder="Florence, Italy"
+                        value={localLocation}
+                        onChange={(e) => setLocalLocation(e.target.value)}
                         className="flex-1 outline-none bg-transparent text-gray-900 placeholder-gray-400"
                       />
                     </div>
-                    <button className="bg-primary-600 hover:bg-primary-700 text-white font-medium px-8 py-3 rounded-md transition-colors whitespace-nowrap">
+                    <button 
+                      onClick={() => {
+                        const params = new URLSearchParams();
+                        if (localSearch) params.set('search', localSearch);
+                        if (localLocation) params.set('location', localLocation);
+                        router.push(`/jobs?${params.toString()}`);
+                      }}
+                      className="bg-primary-600 hover:bg-primary-700 text-white font-medium px-8 py-3 rounded-md transition-colors whitespace-nowrap"
+                    >
                       Search my job
                     </button>
                   </div>
@@ -117,7 +130,14 @@ export default function Home() {
                 <div className="flex flex-wrap items-center gap-2">
                   <span className="text-gray-600 text-sm">Popular:</span>
                   {['UI Designer', 'UX Researcher', 'Android', 'Admin'].map((tag) => (
-                    <button key={tag} className="text-sm text-gray-700 hover:text-primary-600 transition">
+                    <button 
+                      key={tag} 
+                      onClick={() => {
+                        setLocalSearch(tag);
+                        router.push(`/jobs?search=${encodeURIComponent(tag)}`);
+                      }}
+                      className="text-sm text-gray-700 hover:text-primary-600 transition"
+                    >
                       {tag}
                     </button>
                   ))}
@@ -213,9 +233,17 @@ export default function Home() {
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {filteredJobs.slice(0, 8).map((job) => (
-                  <JobCard key={job._id} job={job} />
-                ))}
+                {filteredJobs
+                  .sort((a, b) => {
+                    // Sort by postedDate (most recent first)
+                    const dateA = a.postedDate ? new Date(a.postedDate) : new Date(0);
+                    const dateB = b.postedDate ? new Date(b.postedDate) : new Date(0);
+                    return dateB - dateA;
+                  })
+                  .slice(0, 8)
+                  .map((job) => (
+                    <JobCard key={job._id} job={job} />
+                  ))}
               </div>
             )}
           </div>
