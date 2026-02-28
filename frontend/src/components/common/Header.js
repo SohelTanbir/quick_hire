@@ -3,7 +3,10 @@
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { FiMenu, FiX } from 'react-icons/fi';
+import { FiMenu, FiX, } from 'react-icons/fi';
+import { FaBarsStaggered } from "react-icons/fa6";
+
+
 
 export default function Header() {
     const [isOpen, setIsOpen] = useState(false);
@@ -25,12 +28,12 @@ export default function Header() {
     }, [isOpen]);
 
     return (
-        <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
+        <header className="bg-[#F8F8FD] sticky top-0 z-50">
             <nav className="container mx-auto px-4 py-4 flex items-center justify-between">
                 {/* Logo */}
                 <Link href="/" className="flex items-center gap-2 relative z-50">
                     <Image
-                        src="/assets/images/logo/Logo%201.png"
+                        src="/assets/images/logo/logo.png"
                         alt="QuickHire Logo"
                         width={36}
                         height={36}
@@ -79,7 +82,7 @@ export default function Header() {
                     className="md:hidden text-gray-600 hover:text-primary-500 transition p-2 relative z-50"
                     aria-label="Toggle menu"
                 >
-                    {isOpen ? <FiX size={24} /> : <FiMenu size={24} />}
+                    {isOpen ? <FiX size={24} /> : <FaBarsStaggered  size={24} />}
                 </button>
 
                 {/* Mobile Navigation Offcanvas */}

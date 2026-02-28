@@ -24,7 +24,7 @@ export default function Footer() {
                     <div className="space-y-4">
                         <Link href="/" className="flex items-center gap-2 w-fit">
                             <Image
-                                src="/assets/images/logo/Logo%201.png"
+                                src="/assets/images/logo/logo.png"
                                 alt="QuickHire Logo"
                                 width={40}
                                 height={40}

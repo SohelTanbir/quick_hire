@@ -19,7 +19,7 @@ export default function EmployerCTASection() {
             <div className="container mx-auto px-4 relative z-10">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                     {/* Left Content */}
-                    <div className="text-white">
+                    <div className="text-white text-center lg:text-left">
                         <h2 className="font-clash text-4xl md:text-5xl font-bold mb-6">
                             Start posting<br />jobs today
                         </h2>
@@ -28,14 +28,13 @@ export default function EmployerCTASection() {
                         </p>
                         <Link
                             href="/employer/signup"
-                            className="inline-block bg-[#4640DE] hover:bg-primary-700 text-white font-epilogue font-bold text-base leading-[160%] px-8 py-3 transition-colors"
+                            className="inline-block bg-white hover:bg-primary-700 text-primary-600 font-epilogue font-bold text-base leading-[160%] px-8 py-3 transition-colors"
                         >
                             Sign Up for free
                         </Link>
                     </div>
 
-                    {/* Right Dashboard Mockup */}
-                    <div className="hidden lg:block relative h-96">
+                    <div className=" relative h-96">
                         <Image
                             src="/assets/images/dashboard/dashboard-mokup.png"
                             alt="Dashboard Mockup"
