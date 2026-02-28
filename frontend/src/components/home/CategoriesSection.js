@@ -1,68 +1,67 @@
 'use client';
 
 import Link from 'next/link';
-import { FiCode, FiTrendingUp, FiEdit, FiDollarSign, FiMusic, FiDatabase, FiShield, FiHeart, FiArrowRight, FiUsers } from 'react-icons/fi';
+import { FiCode, FiTrendingUp, FiEdit, FiDollarSign, FiArrowRight, FiUsers, FiBriefcase } from 'react-icons/fi';
 import { useGetJobsQuery } from '@/store/services/api';
 import { useMemo } from 'react';
 
+// Skeleton loading component
+function CategorySkeleton() {
+    return (
+        <div className="w-full h-[214px] flex flex-col justify-between p-8 border border-[#D6DDEB] bg-white animate-pulse">
+            <div className="w-8 h-8 bg-gray-300 rounded"></div>
+            <div className="space-y-3">
+                <div className="h-6 bg-gray-300 rounded w-24"></div>
+                <div className="h-4 bg-gray-200 rounded w-32"></div>
+            </div>
+        </div>
+    );
+}
+
+function MobileCategorySkeleton() {
+    return (
+        <div className="flex items-center gap-4 px-4 py-4 bg-white border-b border-[#D6DDEB] animate-pulse">
+            <div className="flex-shrink-0 w-6 h-6 bg-gray-300 rounded"></div>
+            <div className="flex-1 space-y-2">
+                <div className="h-4 bg-gray-300 rounded w-20"></div>
+                <div className="h-3 bg-gray-200 rounded w-28"></div>
+            </div>
+            <div className="flex-shrink-0 w-5 h-5 bg-gray-300 rounded"></div>
+        </div>
+    );
+}
+
 export default function CategoriesSection() {
-    const { data: jobsData } = useGetJobsQuery();
+    const { data: jobsData, isLoading } = useGetJobsQuery();
+
     const jobs = Array.isArray(jobsData)
         ? jobsData
         : Array.isArray(jobsData?.data)
             ? jobsData.data
             : [];
 
-    // Category icon and color mapping
-    const categoryStyles = {
-        'Development': {
-            icon: FiCode,
-            color: 'text-blue-600',
-            bgColor: 'bg-blue-50',
-            borderColor: 'border-blue-200',
-        },
-        'Marketing': {
-            icon: FiTrendingUp,
-            color: 'text-green-600',
-            bgColor: 'bg-green-50',
-            borderColor: 'border-green-200',
-        },
-        'Design': {
-            icon: FiEdit,
-            color: 'text-purple-600',
-            bgColor: 'bg-purple-50',
-            borderColor: 'border-purple-200',
-        },
-        'Finance': {
-            icon: FiDollarSign,
-            color: 'text-orange-600',
-            bgColor: 'bg-orange-50',
-            borderColor: 'border-orange-200',
-        },
-        'Data Science': {
-            icon: FiDatabase,
-            color: 'text-indigo-600',
-            bgColor: 'bg-indigo-50',
-            borderColor: 'border-indigo-200',
-        },
-        'HR': {
-            icon: FiUsers,
-            color: 'text-teal-600',
-            bgColor: 'bg-teal-50',
-            borderColor: 'border-teal-200',
-        },
-        'Security': {
-            icon: FiShield,
-            color: 'text-red-600',
-            bgColor: 'bg-red-50',
-            borderColor: 'border-red-200',
-        },
-        'Healthcare': {
-            icon: FiHeart,
-            color: 'text-pink-600',
-            bgColor: 'bg-pink-50',
-            borderColor: 'border-pink-200',
-        },
+    // Fixed category order matching design
+    const categoryOrder = [
+        'Design',
+        'Sales',
+        'Marketing',
+        'Finance',
+        'Technology',
+        'Engineering',
+        'Business',
+        'Human Resources',
+    ];
+
+    // Category icon mapping
+    const categoryIcons = {
+        'Technology': FiCode,
+        'Design': FiEdit,
+        'Sales': FiTrendingUp,
+        'Marketing': FiTrendingUp,
+        'Finance': FiDollarSign,
+        'Engineering': FiCode,
+        'Business': FiBriefcase,
+        'Human Resources': FiUsers,
     };
 
     // Calculate job counts per category dynamically
@@ -74,61 +73,126 @@ export default function CategoriesSection() {
             categoryCounts[category] = (categoryCounts[category] || 0) + 1;
         });
 
-        return Object.entries(categoryCounts).map(([name, count]) => ({
+        // Return categories in fixed order
+        return categoryOrder.map(name => ({
             name,
-            openPositions: count,
-            ...(categoryStyles[name] || {
-                icon: FiCode,
-                color: 'text-gray-600',
-                bgColor: 'bg-gray-50',
-                borderColor: 'border-gray-200',
-            }),
+            jobsCount: categoryCounts[name] || 0,
+            icon: categoryIcons[name] || FiCode,
         }));
     }, [jobs]);
 
     return (
-        <section>
-            <div className="flex items-center justify-between mb-12">
-                <h2 className="font-clash text-4xl font-bold text-gray-900">
-                    Explore by <span className="text-primary-600">category</span>
+        <section className="py-20">
+            {/* Desktop Header */}
+            <div className="hidden md:flex items-center justify-between mb-12">
+                <h2 className="font-clash text-4xl font-bold text-[#25324B]">
+                    Explore by <span className="text-[#4640DE]">category</span>
                 </h2>
                 <Link
                     href="/jobs"
-                    className="flex items-center gap-2 text-primary-600 hover:text-primary-700 font-medium group"
+                    className="flex items-center gap-2 text-[#4640DE] hover:text-primary-700 font-epilogue font-semibold text-base group"
                 >
                     Show all jobs
-                    <FiArrowRight className="group-hover:translate-x-1 transition-transform" />
+                    <FiArrowRight className="group-hover:translate-x-1 transition-transform" size={20} />
                 </Link>
             </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-                {categories.length === 0 ? (
-                    <div className="col-span-full text-center py-12">
-                        <p className="text-gray-500">No job categories available at the moment.</p>
-                    </div>
+            {/* Mobile Header */}
+            <div className="md:hidden mb-8">
+                <h2 className="font-clash text-[20px] font-semibold text-[#25324B] mb-6">
+                    Explore by <span className="text-[#4640DE]">category</span>
+                </h2>
+            </div>
+
+            {/* Desktop Grid Layout - 4 columns */}
+            <div className="hidden md:grid grid-cols-4 gap-8 mb-12">
+                {isLoading ? (
+                    <>
+                        {[...Array(8)].map((_, index) => (
+                            <CategorySkeleton key={index} />
+                        ))}
+                    </>
                 ) : (
                     categories.map((category, index) => {
                         const Icon = category.icon;
+
                         return (
                             <Link
                                 key={index}
                                 href={`/jobs?category=${encodeURIComponent(category.name)}`}
-                                className={`bg-white rounded-xl p-6 border ${category.borderColor} hover:shadow-xl transition-all duration-300 group hover:-translate-y-1`}
+                                className="group transition-all duration-300"
                             >
-                                <div className={`inline-flex items-center justify-center w-12 h-12 rounded-lg ${category.bgColor} mb-4 group-hover:scale-110 transition-transform`}>
-                                    <Icon className={category.color} size={24} />
+                                <div className="w-full h-[214px] flex flex-col justify-between p-8 border border-[#D6DDEB] bg-white hover:bg-[#4640DE] transition-all duration-300 cursor-pointer">
+                                    {/* Icon */}
+                                    <div className="flex items-start">
+                                        <Icon className="text-[#4640DE] group-hover:text-white transition-colors" size={32} />
+                                    </div>
+
+                                    {/* Content */}
+                                    <div className="space-y-2">
+                                        <h3 className="font-clash font-semibold md:text-2xl text-xl text-[#25324B] group-hover:text-white transition-colors leading-[120%]">
+                                            {category.name}
+                                        </h3>
+                                        <p className="font-epilogue font-normal text-lg text-[#7C8493] group-hover:text-blue-100 transition-colors leading-[160%]">
+                                            {category.jobsCount} job{category.jobsCount !== 1 ? 's' : ''} available
+                                        </p>
+                                    </div>
                                 </div>
-                                <h3 className="font-epilogue font-semibold text-lg text-gray-900 mb-2">
-                                    {category.name}
-                                </h3>
-                                <p className="font-inter text-sm text-gray-600">
-                                    {category.openPositions} Open {category.openPositions === 1 ? 'position' : 'positions'}
-                                </p>
                             </Link>
                         );
                     })
                 )}
             </div>
+
+            {/* Mobile List Layout - Single Column */}
+            <div className="md:hidden space-y-0 mb-8">
+                {isLoading ? (
+                    <>
+                        {[...Array(8)].map((_, index) => (
+                            <MobileCategorySkeleton key={index} />
+                        ))}
+                    </>
+                ) : (
+                    categories.map((category, index) => {
+                        const Icon = category.icon;
+
+                        return (
+                            <Link
+                                key={index}
+                                href={`/jobs?category=${encodeURIComponent(category.name)}`}
+                                className="flex items-center gap-4 px-4 py-4 bg-white border-b border-[#D6DDEB] hover:bg-primary-50 transition-colors group"
+                            >
+                                <div className="flex-shrink-0 flex items-center justify-center">
+                                    <Icon className="text-[#4640DE]" size={24} />
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                    <h3 className="font-clash font-semibold text-[20px] text-[#25324B]">
+                                        {category.name}
+                                    </h3>
+                                    <p className="font-epilogue font-normal text-[#7C8493] text-sm">
+                                        {category.jobsCount} job{category.jobsCount !== 1 ? 's' : ''} available
+                                    </p>
+                                </div>
+                                <FiArrowRight className="flex-shrink-0 text-[#4640DE] group-hover:translate-x-1 transition-transform" size={20} />
+                            </Link>
+                        );
+                    })
+                )}
+            </div>
+
+            {/* Mobile Show All Jobs Link */}
+            <div className="md:hidden mb-8">
+                <Link
+                    href="/jobs"
+                    className="flex items-center gap-2 text-[#4640DE] hover:text-primary-700 font-epilogue font-semibold text-base group"
+                >
+                    Show all jobs
+                    <FiArrowRight className="group-hover:translate-x-1 transition-transform" size={20} />
+                </Link>
+            </div>
+
+            {/* Bottom Border */}
+            <div className="hidden md:block border-b border-[#D6DDEB] pt-8" />
         </section>
     );
 }

@@ -152,7 +152,7 @@ export default function Home() {
               </div>
 
               {/* Right Image */}
-              <div className="order-1 lg:order-2">
+              <div className="order-1 lg:order-2 hidden lg:block">
                 <div className="relative w-full aspect-square md:aspect-auto md:h-[500px] lg:h-[600px]">
                   <Image
                     src="/assets/images/hero/hero-man.png"
@@ -168,15 +168,15 @@ export default function Home() {
             {/* Company Logos */}
             <div className="mt-12 md:mt-16">
               <p className="text-[#7C8493] text-sm font-inter mb-4 md:mb-6">Companies we helped grow</p>
-              <div className="flex flex-wrap items-center gap-6 md:gap-8 opacity-70">
+              <div className="flex flex-wrap items-center justify-between gap-6 md:gap-8 opacity-70">
                 {Array.from({ length: 5 }).map((_, idx) => (
                   <Image
                     key={idx}
-                    src="/assets/images/logo/Logo%201.png"
+                    src={`/assets/images/companies/${idx + 1}.png`}
                     alt={`Company logo ${idx + 1}`}
-                    width={32}
-                    height={32}
-                    className="rounded-md grayscale hover:grayscale-0 transition-all"
+                    width={120}
+                    height={40}
+                    className="object-contain hover:opacity-100 transition-opacity"
                   />
                 ))}
               </div>

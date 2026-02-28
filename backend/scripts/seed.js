@@ -9,7 +9,7 @@ const jobsSeed = [
         title: 'Senior Frontend Engineer',
         company: 'QuickHire Labs',
         location: 'Remote',
-        category: 'Development',
+        category: 'Technology',
         description:
             'Build scalable frontend features with React and Next.js, collaborate with product and design teams, and improve performance across the hiring platform.',
         salary: '$95,000 - $130,000',
@@ -75,7 +75,7 @@ const jobsSeed = [
         title: 'Data Analyst',
         company: 'InsightGrid',
         location: 'Toronto, Canada',
-        category: 'Data Science',
+        category: 'Technology',
         description:
             'Analyze hiring funnel metrics, build dashboards, and support decision making across recruiting and product teams.',
         salary: '$65,000 - $90,000',
@@ -97,7 +97,7 @@ const jobsSeed = [
         title: 'HR Operations Associate',
         company: 'PeopleFirst Co.',
         location: 'London, UK',
-        category: 'HR',
+        category: 'Human Resources',
         description:
             'Support recruiting operations, coordinate interviews, and maintain candidate records across multiple roles.',
         salary: '$45,000 - $62,000',
@@ -119,7 +119,7 @@ const jobsSeed = [
         title: 'Junior Backend Developer',
         company: 'APIForge',
         location: 'Dhaka, Bangladesh',
-        category: 'Development',
+        category: 'Technology',
         description:
             'Implement backend endpoints, integrate MongoDB models, and help maintain a stable API used by frontend applications.',
         salary: '$35,000 - $50,000',
@@ -136,6 +136,94 @@ const jobsSeed = [
         ],
         companyDescription: 'APIForge builds robust backend systems for modern web applications.',
         postedDate: '5 days ago',
+    },
+    {
+        title: 'Sales Executive',
+        company: 'VenturePlus',
+        location: 'New York, NY',
+        category: 'Sales',
+        description:
+            'Drive revenue growth by prospecting and closing deals with enterprise clients. Build relationships and exceed quarterly targets.',
+        salary: '$50,000 - $75,000 + Commission',
+        jobType: 'Full-time',
+        requirements: [
+            '2+ years in enterprise sales',
+            'Strong negotiation skills',
+            'CRM software experience',
+        ],
+        responsibilities: [
+            'Develop new business opportunities',
+            'Manage sales pipeline and forecasting',
+            'Close deals and exceed quota targets',
+        ],
+        companyDescription: 'VenturePlus provides B2B solutions for growing startups and enterprises.',
+        postedDate: '6 days ago',
+    },
+    {
+        title: 'Financial Analyst',
+        company: 'FinanceHub',
+        location: 'San Francisco, CA',
+        category: 'Finance',
+        description:
+            'Analyze financial statements, build models, and provide insights to support strategic business decisions.',
+        salary: '$70,000 - $100,000',
+        jobType: 'Full-time',
+        requirements: [
+            'Strong Excel and modeling skills',
+            'Knowledge of financial statements',
+            'Attention to detail',
+        ],
+        responsibilities: [
+            'Build financial models and forecasts',
+            'Analyze company performance metrics',
+            'Prepare reports for leadership review',
+        ],
+        companyDescription: 'FinanceHub delivers financial intelligence solutions to Fortune 500 companies.',
+        postedDate: '4 days ago',
+    },
+    {
+        title: 'Business Development Manager',
+        company: 'GrowthCo',
+        location: 'Singapore',
+        category: 'Business',
+        description:
+            'Identify and evaluate new business opportunities, manage partnerships, and drive expansion into new markets.',
+        salary: '$65,000 - $95,000',
+        jobType: 'Full-time',
+        requirements: [
+            '3+ years of business development experience',
+            'Strong analytical and negotiation skills',
+            'Experience with market analysis',
+        ],
+        responsibilities: [
+            'Identify growth opportunities',
+            'Negotiate and manage partnerships',
+            'Monitor market trends and competitor activity',
+        ],
+        companyDescription: 'GrowthCo accelerates business expansion through strategic partnerships and market insights.',
+        postedDate: '2 days ago',
+    },
+    {
+        title: 'Systems Engineer',
+        company: 'TechCore Solutions',
+        location: 'Seattle, WA',
+        category: 'Engineering',
+        description:
+            'Design and maintain scalable infrastructure, ensure system reliability, and collaborate with development teams.',
+        salary: '$85,000 - $120,000',
+        jobType: 'Full-time',
+        requirements: [
+            '5+ years of systems or infrastructure experience',
+            'Cloud platform expertise (AWS/Azure)',
+            'Strong Linux and networking knowledge',
+        ],
+        responsibilities: [
+            'Design and deploy system architectures',
+            'Optimize system performance and reliability',
+            'Implement monitoring and automation solutions',
+        ],
+        companyDescription: 'TechCore Solutions provides enterprise infrastructure and cloud solutions.',
+        postedDate: '3 days ago',
     },
 ];
 
