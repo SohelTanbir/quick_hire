@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import Header from '@/components/common/Header';
@@ -10,7 +10,7 @@ import LoadingSkeleton from '@/components/common/LoadingSkeleton';
 import { useGetJobsQuery } from '@/store/services/api';
 import { FiSearch, FiSliders, FiX } from 'react-icons/fi';
 
-export default function JobsPage() {
+function JobsPageContent() {
     const searchParams = useSearchParams();
     const [showFilters, setShowFilters] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
@@ -304,5 +304,13 @@ export default function JobsPage() {
             </main>
             <Footer />
         </>
+    );
+}
+
+export default function JobsPage() {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <JobsPageContent />
+        </Suspense>
     );
 }
