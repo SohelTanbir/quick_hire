@@ -1,12 +1,13 @@
 'use client';
 
 import Link from 'next/link';
+import { Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Header from '@/components/common/Header';
 import Footer from '@/components/common/Footer';
 import { FiCheckCircle, FiArrowRight } from 'react-icons/fi';
 
-export default function ApplicationSuccessPage() {
+function ApplicationSuccessContent() {
     const searchParams = useSearchParams();
     const jobTitle = searchParams.get('jobTitle') || 'the position';
 
@@ -94,5 +95,13 @@ export default function ApplicationSuccessPage() {
             </main>
             <Footer />
         </>
+    );
+}
+
+export default function ApplicationSuccessPage() {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <ApplicationSuccessContent />
+        </Suspense>
     );
 }

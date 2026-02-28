@@ -6,8 +6,9 @@ export const metadata = {
   title: 'QuickHire - Job Board',
   description: 'Find your next job at QuickHire - A simple job board application',
   keywords: 'jobs, job board, careers, employment',
-  viewport: 'width=device-width, initial-scale=1',
 };
+
+export const viewport = 'width=device-width, initial-scale=1';
 
 export default function RootLayout({ children }) {
   return (
