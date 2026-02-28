@@ -72,7 +72,7 @@ export default function JobCard({ job }) {
 
                         <Link
                             href={`/jobs/${job._id}`}
-                            className="px-5 py-2 bg-[#4640DE] hover:bg-primary-700 text-white font-epilogue font-bold text-base leading-[160%] rounded-lg transition-colors"
+                            className="px-5 py-2 bg-[#4640DE] hover:bg-primary-700 text-white font-epilogue font-bold text-base leading-[160%] transition-colors"
                         >
                             Apply Now
                         </Link>

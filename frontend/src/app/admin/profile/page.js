@@ -7,9 +7,14 @@ import Header from '@/components/common/Header';
 import Footer from '@/components/common/Footer';
 import { FiArrowLeft, FiUpload } from 'react-icons/fi';
 
+const LoadingSpinner = () => (
+    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+);
+
 export default function AdminProfilePage() {
     const router = useRouter();
     const [isEditing, setIsEditing] = useState(false);
+    const [isSaving, setIsSaving] = useState(false);
     const [formData, setFormData] = useState({
         companyName: 'TechCorp Inc.',
         email: 'hr@techcorp.com',
@@ -29,11 +34,17 @@ export default function AdminProfilePage() {
         }));
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
+        setIsSaving(true);
         // TODO: Send form data to API
-        console.log('Profile updated:', formData);
-        setIsEditing(false);
+        try {
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            console.log('Profile updated:', formData);
+        } finally {
+            setIsSaving(false);
+            setIsEditing(false);
+        }
     };
 
     return (
@@ -190,15 +201,23 @@ export default function AdminProfilePage() {
                                         <button
                                             type="button"
                                             onClick={() => setIsEditing(false)}
-                                            className="flex-1 px-6 py-3 border border-gray-300 text-gray-900 rounded-lg hover:bg-gray-50 transition-colors font-epilogue font-bold text-base leading-[160%]"
+                                            className="flex-1 px-6 py-3 border border-gray-300 text-gray-900 hover:bg-gray-50 transition-colors font-epilogue font-bold text-base leading-[160%]"
                                         >
                                             Cancel
                                         </button>
                                         <button
                                             type="submit"
-                                            className="flex-1 px-6 py-3 bg-[#4640DE] text-white rounded-lg hover:bg-primary-700 transition-colors font-epilogue font-bold text-base leading-[160%]"
+                                            disabled={isSaving}
+                                            className="flex-1 px-6 py-3 bg-[#4640DE] text-white hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-epilogue font-bold text-base leading-[160%] flex items-center justify-center gap-2"
                                         >
-                                            Save Changes
+                                            {isSaving ? (
+                                                <>
+                                                    <LoadingSpinner />
+                                                    Saving...
+                                                </>
+                                            ) : (
+                                                'Save Changes'
+                                            )}
                                         </button>
                                     </div>
                                 </form>

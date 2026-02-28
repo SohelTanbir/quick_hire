@@ -84,7 +84,7 @@ function ApplicationForm() {
                             </p>
                             <Link
                                 href="/jobs"
-                                className="inline-block px-8 py-3 bg-[#4640DE] text-white rounded-lg hover:bg-primary-700 transition-colors font-epilogue font-bold text-base leading-[160%]"
+                                className="inline-block px-8 py-3 bg-[#4640DE] text-white hover:bg-primary-700 transition-colors font-epilogue font-bold text-base leading-[160%]"
                             >
                                 Browse Jobs
                             </Link>
@@ -414,7 +414,7 @@ function ApplicationForm() {
                                     <button
                                         type="button"
                                         onClick={() => setStep(step + 1)}
-                                        className={`flex-1 px-6 py-3 bg-[#4640DE] text-white rounded-lg hover:bg-primary-700 transition-colors font-epilogue font-bold text-base leading-[160%] ${step === 1 &&
+                                        className={`flex-1 px-6 py-3 bg-[#4640DE] text-white hover:bg-primary-700 transition-colors font-epilogue font-bold text-base leading-[160%] ${step === 1 &&
                                                 (!formData.firstName || !formData.lastName || !formData.email || !formData.phone || !formData.location)
                                                 ? 'opacity-50 cursor-not-allowed'
                                                 : ''
@@ -430,7 +430,7 @@ function ApplicationForm() {
                                     <button
                                         type="submit"
                                         disabled={!formData.agreeToTerms || isSubmitting}
-                                        className="flex-1 px-6 py-3 bg-[#4640DE] text-white rounded-lg hover:bg-primary-700 transition-colors font-epilogue font-bold text-base leading-[160%] disabled:opacity-50"
+                                        className="flex-1 px-6 py-3 bg-[#4640DE] text-white hover:bg-primary-700 transition-colors font-epilogue font-bold text-base leading-[160%] disabled:opacity-50"
                                     >
                                         {isSubmitting ? 'Submitting...' : 'Submit Application'}
                                     </button>

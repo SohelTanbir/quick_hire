@@ -7,8 +7,13 @@ import Header from '@/components/common/Header';
 import Footer from '@/components/common/Footer';
 import { FiArrowLeft, FiPlus, FiX } from 'react-icons/fi';
 
+const LoadingSpinner = () => (
+    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+);
+
 export default function NewJobPage() {
     const router = useRouter();
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const [formData, setFormData] = useState({
         title: '',
         location: '',
@@ -281,15 +286,23 @@ export default function NewJobPage() {
                                 <button
                                     type="button"
                                     onClick={() => router.back()}
-                                    className="flex-1 px-6 py-3 border border-gray-300 text-gray-900 rounded-lg hover:bg-gray-50 transition-colors font-epilogue font-bold text-base leading-[160%]"
+                                    className="flex-1 px-6 py-3 border border-gray-300 text-gray-900 hover:bg-gray-50 transition-colors font-epilogue font-bold text-base leading-[160%]"
                                 >
                                     Cancel
                                 </button>
                                 <button
                                     type="submit"
-                                    className="flex-1 px-6 py-3 bg-[#4640DE] text-white rounded-lg hover:bg-primary-700 transition-colors font-epilogue font-bold text-base leading-[160%]"
+                                    disabled={isSubmitting}
+                                    className="flex-1 px-6 py-3 bg-[#4640DE] text-white hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-epilogue font-bold text-base leading-[160%] flex items-center justify-center gap-2"
                                 >
-                                    Post Job
+                                    {isSubmitting ? (
+                                        <>
+                                            <LoadingSpinner />
+                                            Posting...
+                                        </>
+                                    ) : (
+                                        'Post Job'
+                                    )}
                                 </button>
                             </div>
                         </form>

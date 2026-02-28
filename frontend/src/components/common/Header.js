@@ -55,7 +55,7 @@ export default function Header() {
                     </Link>
                     <Link
                         href="/signup"
-                        className="px-6 py-2 bg-[#4640DE] hover:bg-primary-700 text-white rounded-md transition font-epilogue font-bold text-base leading-[160%]"
+                        className="px-6 py-2 bg-[#4640DE] hover:bg-primary-700 text-white transition font-epilogue font-bold text-base leading-[160%]"
                     >
                         Sign Up
                     </Link>
@@ -98,7 +98,7 @@ export default function Header() {
                                 </Link>
                                 <Link
                                     href="/signup"
-                                    className="px-6 py-2 text-center bg-[#4640DE] hover:bg-primary-700 text-white rounded-md transition font-epilogue font-bold text-base leading-[160%]"
+                        className="px-6 py-2 text-center bg-[#4640DE] hover:bg-primary-700 text-white transition font-epilogue font-bold text-base leading-[160%]"
                                     onClick={() => setIsOpen(false)}
                                 >
                                     Sign Up
