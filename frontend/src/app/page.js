@@ -196,20 +196,27 @@ export default function Home() {
         <FeaturedJobsSection />
 
         {/* Latest Jobs Section */}
-        <section className="py-20 bg-white">
+        <section className="py-20 bg-[#F8F8FD]">
           <div className="container mx-auto px-4">
-            {/* Section Header */}
-            <div className="flex items-center justify-between mb-12">
-              <h2 className="font-clash text-4xl font-bold text-gray-900">
-                Latest <span className="text-primary-600">jobs open</span>
+            {/* Desktop Header */}
+            <div className="hidden md:flex items-center justify-between mb-12">
+              <h2 className="font-clash text-4xl font-bold text-[#25324B]">
+                Latest <span className="text-[#4640DE]">jobs open</span>
               </h2>
               <Link
                 href="/jobs"
-                className="flex items-center gap-2 text-primary-600 hover:text-primary-700 font-medium group"
+                className="flex items-center gap-2 text-[#4640DE] hover:text-primary-700 font-epilogue font-semibold text-base group"
               >
                 Show all jobs
-                <FiArrowRight className="group-hover:translate-x-1 transition-transform" />
+                <FiArrowRight className="group-hover:translate-x-1 transition-transform" size={20} />
               </Link>
+            </div>
+
+            {/* Mobile Header */}
+            <div className="md:hidden mb-8">
+              <h2 className="font-clash text-[32px] font-semibold text-[#25324B] mb-6">
+                Latest <span className="text-[#4640DE]">jobs open</span>
+              </h2>
             </div>
 
             {error ? (
@@ -237,19 +244,32 @@ export default function Home() {
                 </p>
               </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {filteredJobs
-                  .sort((a, b) => {
-                    // Sort by postedDate (most recent first)
-                    const dateA = a.postedDate ? new Date(a.postedDate) : new Date(0);
-                    const dateB = b.postedDate ? new Date(b.postedDate) : new Date(0);
-                    return dateB - dateA;
-                  })
-                  .slice(0, 8)
-                  .map((job) => (
-                    <JobCard key={job._id} job={job} />
-                  ))}
-              </div>
+              <>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 mb-8">
+                  {filteredJobs
+                    .sort((a, b) => {
+                      // Sort by postedDate (most recent first)
+                      const dateA = a.postedDate ? new Date(a.postedDate) : new Date(0);
+                      const dateB = b.postedDate ? new Date(b.postedDate) : new Date(0);
+                      return dateB - dateA;
+                    })
+                    .slice(0, 8)
+                    .map((job, index) => (
+                      <JobCard key={job._id} job={job} index={index} />
+                    ))}
+                </div>
+
+                {/* Mobile Show All Jobs Link */}
+                <div className="md:hidden">
+                  <Link
+                    href="/jobs"
+                    className="flex items-center gap-2 text-[#4640DE] hover:text-primary-700 font-epilogue font-semibold text-base group"
+                  >
+                    Show all jobs
+                    <FiArrowRight className="group-hover:translate-x-1 transition-transform" size={20} />
+                  </Link>
+                </div>
+              </>
             )}
           </div>
         </section>
