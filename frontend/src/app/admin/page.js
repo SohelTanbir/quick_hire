@@ -92,7 +92,7 @@ export default function AdminDashboard() {
                             </div>
                             <Link
                                 href="/admin/jobs/new"
-                                className="flex items-center gap-2 px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors font-medium"
+                                className="flex items-center gap-2 px-6 py-3 bg-[#4640DE] text-white rounded-lg hover:bg-[#3B35C8] transition-colors font-medium"
                             >
                                 <FiPlus size={20} />
                                 Post New Job
