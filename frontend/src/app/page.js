@@ -63,27 +63,36 @@ export default function Home() {
 
       <main>
         {/* Hero Section */}
-        <section className="bg-[#F8F8FD] pt-16 pb-12">
-          <div className="container mx-auto px-4">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <section className="bg-[#F8F8FD] pt-12 md:pt-20 pb-12 md:pb-20 relative overflow-hidden">
+          {/* Background Decorative Lines - Desktop Only */}
+          <div className="hidden lg:block absolute inset-0 pointer-events-none">
+            <svg className="absolute top-0 right-0 w-1/2 h-full opacity-20" viewBox="0 0 600 800" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M100 0 L500 400" stroke="#4640DE" strokeWidth="2" />
+              <path d="M200 0 L600 400" stroke="#4640DE" strokeWidth="2" />
+              <path d="M0 200 L400 600" stroke="#4640DE" strokeWidth="2" />
+            </svg>
+          </div>
+
+          <div className="container mx-auto px-4 relative z-10">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
               {/* Left Content */}
-              <div>
-                <h1 className="font-clash text-5xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight">
+              <div className="order-2 lg:order-1">
+                <h1 className="font-clash text-4xl md:text-5xl lg:text-6xl font-bold text-[#25324B] mb-4 md:mb-6 leading-tight">
                   Discover<br />
                   more than<br />
                   <span className="text-[#4640DE] relative inline-block">
                     5000+ Jobs
-                    <svg className="absolute -bottom-2 left-0 w-full" height="8" viewBox="0 0 300 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <svg className="absolute -bottom-1 md:-bottom-2 left-0 w-full" height="8" viewBox="0 0 300 8" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path d="M1 6C50 2 100 1 150 3C200 5 250 6 299 4" stroke="#4640DE" strokeWidth="3" strokeLinecap="round" />
                     </svg>
                   </span>
                 </h1>
-                <p className="font-inter text-lg text-gray-600 mb-10 max-w-lg">
-                  Great platform for the job seeker that is searching for new career heights and passionate about startups.
+                <p className="font-inter text-base md:text-lg text-[#7C8493] mb-6 md:mb-8 max-w-lg">
+                  Great platform for the job seeker that searching for new career heights and passionate about startups.
                 </p>
 
                 {/* Search Bar */}
-                <div className="bg-white shadow-lg p-2 mb-6 max-w-4xl">
+                <div className="bg-white shadow-md p-2 mb-6 max-w-3xl">
                   <div className="flex flex-col md:flex-row items-stretch gap-0">
                     <div className="flex items-center gap-3 px-4 py-3 flex-1 min-w-0 border-b md:border-b-0 md:border-r border-gray-200">
                       <svg className="w-5 h-5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -94,7 +103,7 @@ export default function Home() {
                         placeholder="Job title or keyword"
                         value={localSearch}
                         onChange={(e) => handleSearch(e.target.value)}
-                        className="flex-1 min-w-0 outline-none bg-transparent text-gray-900 placeholder-gray-400"
+                        className="flex-1 min-w-0 outline-none bg-transparent text-gray-900 placeholder-gray-400 text-sm md:text-base"
                       />
                     </div>
                     <div className="flex items-center gap-3 px-4 py-3 flex-1 min-w-0 border-b md:border-b-0 border-gray-200">
@@ -107,7 +116,7 @@ export default function Home() {
                         placeholder="Florence, Italy"
                         value={localLocation}
                         onChange={(e) => setLocalLocation(e.target.value)}
-                        className="flex-1 min-w-0 outline-none bg-transparent text-gray-900 placeholder-gray-400"
+                        className="flex-1 min-w-0 outline-none bg-transparent text-gray-900 placeholder-gray-400 text-sm md:text-base"
                       />
                     </div>
                     <button
@@ -117,7 +126,7 @@ export default function Home() {
                         if (localLocation) params.set('location', localLocation);
                         router.push(`/jobs?${params.toString()}`);
                       }}
-                      className="bg-[#4640DE] hover:bg-primary-700 text-white font-epilogue font-bold text-base leading-[160%] px-8 py-3 transition-colors whitespace-nowrap"
+                      className="bg-[#4640DE] hover:bg-primary-700 text-white font-epilogue font-bold text-base leading-[160%] px-6 md:px-8 py-3 transition-colors whitespace-nowrap"
                     >
                       Search my job
                     </button>
@@ -126,7 +135,7 @@ export default function Home() {
 
                 {/* Popular Suggestions */}
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className="text-gray-600 text-sm">Popular:</span>
+                  <span className="text-[#7C8493] text-sm font-inter">Popular :</span>
                   {['UI Designer', 'UX Researcher', 'Android', 'Admin'].map((tag) => (
                     <button
                       key={tag}
@@ -134,7 +143,7 @@ export default function Home() {
                         setLocalSearch(tag);
                         router.push(`/jobs?search=${encodeURIComponent(tag)}`);
                       }}
-                      className="text-sm text-gray-700 hover:text-primary-600 transition"
+                      className="text-sm text-[#7C8493] hover:text-primary-600 transition font-inter"
                     >
                       {tag}
                     </button>
@@ -143,33 +152,31 @@ export default function Home() {
               </div>
 
               {/* Right Image */}
-              <div className="hidden lg:block">
-                <div className="relative">
-                  <div className="absolute inset-0 bg-primary-100 rounded-3xl transform rotate-6"></div>
-                  <div className="relative bg-white rounded-3xl h-96 overflow-hidden border border-gray-200 shadow-lg">
-                    <Image
-                      src="/assets/images/hero/hero-man.png"
-                      alt="Job seeker hero"
-                      fill
-                      className="object-cover"
-                    />
-                  </div>
+              <div className="order-1 lg:order-2">
+                <div className="relative w-full aspect-square md:aspect-auto md:h-[500px] lg:h-[600px]">
+                  <Image
+                    src="/assets/images/hero/hero-man.png"
+                    alt="Job seeker hero"
+                    fill
+                    className="object-contain object-center"
+                    priority
+                  />
                 </div>
               </div>
             </div>
 
             {/* Company Logos */}
-            <div className="mt-16">
-              <p className="text-gray-500 text-sm mb-6">Companies we helped grow</p>
-              <div className="flex flex-wrap items-center gap-8 opacity-80">
+            <div className="mt-12 md:mt-16">
+              <p className="text-[#7C8493] text-sm font-inter mb-4 md:mb-6">Companies we helped grow</p>
+              <div className="flex flex-wrap items-center gap-6 md:gap-8 opacity-70">
                 {Array.from({ length: 5 }).map((_, idx) => (
                   <Image
                     key={idx}
                     src="/assets/images/logo/Logo%201.png"
                     alt={`Company logo ${idx + 1}`}
-                    width={38}
-                    height={38}
-                    className="rounded-md"
+                    width={32}
+                    height={32}
+                    className="rounded-md grayscale hover:grayscale-0 transition-all"
                   />
                 ))}
               </div>
