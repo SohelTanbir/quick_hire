@@ -23,9 +23,7 @@ export default function JobDetailPage() {
         ? jobsData
         : Array.isArray(jobsData?.data)
             ? jobsData.data
-            : Array.isArray(jobsData?.jobs)
-                ? jobsData.jobs
-                : [];
+            : [];
     const numericId = Number.parseInt(jobId, 10);
     const jobByObjectId = jobs.find((j) => j._id === jobId);
     const jobByLegacyNumericId = jobs.find((j) => j.id === numericId);

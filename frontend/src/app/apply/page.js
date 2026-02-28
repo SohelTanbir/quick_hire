@@ -1,17 +1,17 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Header from '@/components/common/Header';
 import Footer from '@/components/common/Footer';
 import { FiArrowLeft, FiUpload, FiX } from 'react-icons/fi';
 
-export default function ApplicationPage() {
+function ApplicationForm() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const jobId = searchParams.get('jobId');
-    const jobTitle = searchParams.get('jobTitle') || 'Job Position';
+    const jobTitle = searchParams.get('jobTitle') || 'this position';
 
     const [step, setStep] = useState(1);
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -67,6 +67,34 @@ export default function ApplicationPage() {
             router.push(`/apply/success?jobTitle=${encodeURIComponent(jobTitle)}`);
         }, 1500);
     };
+
+    // If no jobId is provided, show error message
+    if (!jobId) {
+        return (
+            <>
+                <Header />
+                <main className="min-h-screen bg-white pt-20 pb-20">
+                    <div className="container mx-auto px-4 max-w-2xl text-center">
+                        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-12">
+                            <h1 className="font-clash text-3xl font-bold text-gray-900 mb-4">
+                                Invalid Application Link
+                            </h1>
+                            <p className="text-gray-600 mb-8">
+                                Please navigate to this page from a job posting to apply.
+                            </p>
+                            <Link
+                                href="/jobs"
+                                className="inline-block px-8 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors font-medium"
+                            >
+                                Browse Jobs
+                            </Link>
+                        </div>
+                    </div>
+                </main>
+                <Footer />
+            </>
+        );
+    }
 
     return (
         <>
@@ -387,9 +415,9 @@ export default function ApplicationPage() {
                                         type="button"
                                         onClick={() => setStep(step + 1)}
                                         className={`flex-1 px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors font-medium ${step === 1 &&
-                                                (!formData.firstName || !formData.lastName || !formData.email || !formData.phone || !formData.location)
-                                                ? 'opacity-50 cursor-not-allowed'
-                                                : ''
+                                            (!formData.firstName || !formData.lastName || !formData.email || !formData.phone || !formData.location)
+                                            ? 'opacity-50 cursor-not-allowed'
+                                            : ''
                                             }`}
                                         disabled={
                                             step === 1 &&
@@ -414,5 +442,33 @@ export default function ApplicationPage() {
             </main>
             <Footer />
         </>
+    );
+}
+
+export default function ApplicationPage() {
+    return (
+        <Suspense fallback={
+            <>
+                <Header />
+                <main className="min-h-screen bg-linear-to-b from-blue-50 to-white pt-20 pb-20">
+                    <div className="container mx-auto px-4 max-w-2xl">
+                        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8 md:p-12">
+                            <div className="animate-pulse">
+                                <div className="h-8 bg-gray-200 rounded w-3/4 mb-4"></div>
+                                <div className="h-4 bg-gray-200 rounded w-1/2 mb-8"></div>
+                                <div className="space-y-4">
+                                    <div className="h-12 bg-gray-200 rounded"></div>
+                                    <div className="h-12 bg-gray-200 rounded"></div>
+                                    <div className="h-12 bg-gray-200 rounded"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+                <Footer />
+            </>
+        }>
+            <ApplicationForm />
+        </Suspense>
     );
 }

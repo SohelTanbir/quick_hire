@@ -19,7 +19,18 @@ export default function JobsPage() {
     const [selectedLocation, setSelectedLocation] = useState('');
 
     const { data: jobsData, isLoading } = useGetJobsQuery();
-    const jobs = Array.isArray(jobsData) ? jobsData : Array.isArray(jobsData?.jobs) ? jobsData.jobs : [];
+    const jobs = Array.isArray(jobsData) ? jobsData : Array.isArray(jobsData?.data) ? jobsData.data : [];
+
+    // Extract unique categories and job types from actual jobs
+    const categories = useMemo(() => {
+        const uniqueCategories = [...new Set(jobs.map(job => job.category).filter(Boolean))];
+        return uniqueCategories.sort();
+    }, [jobs]);
+
+    const jobTypes = useMemo(() => {
+        const uniqueTypes = [...new Set(jobs.map(job => job.jobType).filter(Boolean))];
+        return uniqueTypes.length > 0 ? uniqueTypes : ['Full time', 'Part time', 'Contract', 'Freelance', 'Internship'];
+    }, [jobs]);
 
     // Read URL parameters on mount
     useEffect(() => {
@@ -31,15 +42,14 @@ export default function JobsPage() {
             setSelectedCategory(categoryParam);
             setShowFilters(true);
         }
-        if (searchParam) setSearchQuery(searchParam);
+        if (searchParam) {
+            setSearchQuery(searchParam);
+        }
         if (locationParam) {
             setSelectedLocation(locationParam);
             setShowFilters(true);
         }
     }, [searchParams]);
-
-    const categories = ['Development', 'Design', 'Marketing', 'Finance', 'Sales', 'Product'];
-    const jobTypes = ['Full time', 'Part time', 'Contract', 'Freelance'];
 
     // Filter jobs
     const filteredJobs = useMemo(() => {
@@ -49,8 +59,8 @@ export default function JobsPage() {
                 job.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
                 job.company?.toLowerCase().includes(searchQuery.toLowerCase());
 
-            const matchesCategory = !selectedCategory || job.category === selectedCategory;
-            const matchesJobType = !selectedJobType || job.jobType === selectedJobType;
+            const matchesCategory = !selectedCategory || job.category?.trim() === selectedCategory.trim();
+            const matchesJobType = !selectedJobType || job.jobType?.trim() === selectedJobType.trim();
             const matchesLocation = !selectedLocation || job.location?.toLowerCase().includes(selectedLocation.toLowerCase());
 
             return matchesSearch && matchesCategory && matchesJobType && matchesLocation;
@@ -67,7 +77,14 @@ export default function JobsPage() {
                     {/* Page Header */}
                     <div className="mb-8">
                         <h1 className="font-clash text-4xl font-bold text-gray-900 mb-2">Find Your Dream Job</h1>
-                        <p className="text-gray-600">Browse our latest job openings and apply today</p>
+                        <p className="text-gray-600">
+                            Browse our latest job openings and apply today
+                            {hasActiveFilters && (
+                                <span className="ml-2 text-primary-600 font-medium">
+                                    • Filtering{selectedCategory && ` by ${selectedCategory}`}
+                                </span>
+                            )}
+                        </p>
                     </div>
 
                     {/* Search Bar */}
@@ -194,6 +211,11 @@ export default function JobsPage() {
                                 <div className="space-y-4">
                                     <p className="text-gray-600 mb-6">
                                         Showing <strong>{filteredJobs.length}</strong> of <strong>{jobs.length}</strong> jobs
+                                        {selectedCategory && (
+                                            <span className="ml-2 text-sm">
+                                                in <strong className="text-primary-600">{selectedCategory}</strong>
+                                            </span>
+                                        )}
                                     </p>
                                     {filteredJobs.map((job) => (
                                         <JobCard key={job._id || job.id} job={job} />
@@ -202,9 +224,36 @@ export default function JobsPage() {
                             ) : (
                                 <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-12 text-center">
                                     <h3 className="font-epilogue font-semibold text-lg text-gray-900 mb-2">No jobs found</h3>
-                                    <p className="text-gray-600 mb-6">
-                                        Try adjusting your filters or search query to find more jobs
+                                    <p className="text-gray-600 mb-2">
+                                        {selectedCategory || selectedJobType || selectedLocation
+                                            ? 'No jobs match your current filters.'
+                                            : 'Try adjusting your filters or search query to find more jobs'}
                                     </p>
+                                    {hasActiveFilters && (
+                                        <div className="text-sm text-gray-500 mb-6">
+                                            Active filters:
+                                            {selectedCategory && <span className="ml-2 font-medium">Category: {selectedCategory}</span>}
+                                            {selectedJobType && <span className="ml-2 font-medium">Type: {selectedJobType}</span>}
+                                            {selectedLocation && <span className="ml-2 font-medium">Location: {selectedLocation}</span>}
+                                        </div>
+                                    )}
+                                    {/* Debug info */}
+                                    {jobs.length > 0 && selectedCategory && (
+                                        <div className="mt-6 p-4 bg-gray-50 rounded-lg text-left text-xs">
+                                            <p className="font-semibold mb-2">Debug Info:</p>
+                                            <p>Total jobs in database: {jobs.length}</p>
+                                            <p>Selected category: "{selectedCategory}"</p>
+                                            <p className="mt-2">Available categories:</p>
+                                            <ul className="list-disc list-inside">
+                                                {jobs.map((job, idx) => (
+                                                    <li key={idx}>
+                                                        {job.title}: "{job.category}"
+                                                        {job.category?.trim() === selectedCategory.trim() ? ' ✓ MATCH' : ' ✗ NO MATCH'}
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </div>
+                                    )}
                                     <button
                                         onClick={() => {
                                             setSelectedCategory('');

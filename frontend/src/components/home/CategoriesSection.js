@@ -1,75 +1,90 @@
 'use client';
 
 import Link from 'next/link';
-import { FiCode, FiTrendingUp, FiEdit, FiDollarSign, FiMusic, FiDatabase, FiShield, FiHeart, FiArrowRight } from 'react-icons/fi';
+import { FiCode, FiTrendingUp, FiEdit, FiDollarSign, FiMusic, FiDatabase, FiShield, FiHeart, FiArrowRight, FiUsers } from 'react-icons/fi';
+import { useGetJobsQuery } from '@/store/services/api';
+import { useMemo } from 'react';
 
 export default function CategoriesSection() {
-    const categories = [
-        {
+    const { data: jobsData } = useGetJobsQuery();
+    const jobs = Array.isArray(jobsData)
+        ? jobsData
+        : Array.isArray(jobsData?.data)
+            ? jobsData.data
+            : [];
+
+    // Category icon and color mapping
+    const categoryStyles = {
+        'Development': {
             icon: FiCode,
-            name: 'Development',
-            openPositions: 312,
             color: 'text-blue-600',
             bgColor: 'bg-blue-50',
             borderColor: 'border-blue-200',
         },
-        {
+        'Marketing': {
             icon: FiTrendingUp,
-            name: 'Marketing',
-            openPositions: 178,
             color: 'text-green-600',
             bgColor: 'bg-green-50',
             borderColor: 'border-green-200',
         },
-        {
+        'Design': {
             icon: FiEdit,
-            name: 'Design',
-            openPositions: 156,
             color: 'text-purple-600',
             bgColor: 'bg-purple-50',
             borderColor: 'border-purple-200',
         },
-        {
+        'Finance': {
             icon: FiDollarSign,
-            name: 'Finance',
-            openPositions: 89,
             color: 'text-orange-600',
             bgColor: 'bg-orange-50',
             borderColor: 'border-orange-200',
         },
-        {
-            icon: FiMusic,
-            name: 'Music & Audio',
-            openPositions: 67,
-            color: 'text-pink-600',
-            bgColor: 'bg-pink-50',
-            borderColor: 'border-pink-200',
-        },
-        {
+        'Data Science': {
             icon: FiDatabase,
-            name: 'Data Science',
-            openPositions: 145,
             color: 'text-indigo-600',
             bgColor: 'bg-indigo-50',
             borderColor: 'border-indigo-200',
         },
-        {
-            icon: FiShield,
-            name: 'Security',
-            openPositions: 92,
-            color: 'text-red-600',
-            bgColor: 'bg-red-50',
-            borderColor: 'border-red-200',
-        },
-        {
-            icon: FiHeart,
-            name: 'Healthcare',
-            openPositions: 124,
+        'HR': {
+            icon: FiUsers,
             color: 'text-teal-600',
             bgColor: 'bg-teal-50',
             borderColor: 'border-teal-200',
         },
-    ];
+        'Security': {
+            icon: FiShield,
+            color: 'text-red-600',
+            bgColor: 'bg-red-50',
+            borderColor: 'border-red-200',
+        },
+        'Healthcare': {
+            icon: FiHeart,
+            color: 'text-pink-600',
+            bgColor: 'bg-pink-50',
+            borderColor: 'border-pink-200',
+        },
+    };
+
+    // Calculate job counts per category dynamically
+    const categories = useMemo(() => {
+        const categoryCounts = {};
+
+        jobs.forEach(job => {
+            const category = job.category || 'Other';
+            categoryCounts[category] = (categoryCounts[category] || 0) + 1;
+        });
+
+        return Object.entries(categoryCounts).map(([name, count]) => ({
+            name,
+            openPositions: count,
+            ...(categoryStyles[name] || {
+                icon: FiCode,
+                color: 'text-gray-600',
+                bgColor: 'bg-gray-50',
+                borderColor: 'border-gray-200',
+            }),
+        }));
+    }, [jobs]);
 
     return (
         <section>
@@ -87,26 +102,32 @@ export default function CategoriesSection() {
             </div>
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-                {categories.map((category, index) => {
-                    const Icon = category.icon;
-                    return (
-                        <Link
-                            key={index}
-                            href={`/jobs?category=${encodeURIComponent(category.name)}`}
-                            className={`bg-white rounded-xl p-6 border ${category.borderColor} hover:shadow-xl transition-all duration-300 group hover:-translate-y-1`}
-                        >
-                            <div className={`inline-flex items-center justify-center w-12 h-12 rounded-lg ${category.bgColor} mb-4 group-hover:scale-110 transition-transform`}>
-                                <Icon className={category.color} size={24} />
-                            </div>
-                            <h3 className="font-epilogue font-semibold text-lg text-gray-900 mb-2">
-                                {category.name}
-                            </h3>
-                            <p className="font-inter text-sm text-gray-600">
-                                {category.openPositions} Open positions
-                            </p>
-                        </Link>
-                    );
-                })}
+                {categories.length === 0 ? (
+                    <div className="col-span-full text-center py-12">
+                        <p className="text-gray-500">No job categories available at the moment.</p>
+                    </div>
+                ) : (
+                    categories.map((category, index) => {
+                        const Icon = category.icon;
+                        return (
+                            <Link
+                                key={index}
+                                href={`/jobs?category=${encodeURIComponent(category.name)}`}
+                                className={`bg-white rounded-xl p-6 border ${category.borderColor} hover:shadow-xl transition-all duration-300 group hover:-translate-y-1`}
+                            >
+                                <div className={`inline-flex items-center justify-center w-12 h-12 rounded-lg ${category.bgColor} mb-4 group-hover:scale-110 transition-transform`}>
+                                    <Icon className={category.color} size={24} />
+                                </div>
+                                <h3 className="font-epilogue font-semibold text-lg text-gray-900 mb-2">
+                                    {category.name}
+                                </h3>
+                                <p className="font-inter text-sm text-gray-600">
+                                    {category.openPositions} Open {category.openPositions === 1 ? 'position' : 'positions'}
+                                </p>
+                            </Link>
+                        );
+                    })
+                )}
             </div>
         </section>
     );

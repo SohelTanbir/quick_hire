@@ -34,9 +34,7 @@ export default function Home() {
     ? jobsData
     : Array.isArray(jobsData?.data)
       ? jobsData.data
-      : Array.isArray(jobsData?.jobs)
-        ? jobsData.jobs
-        : [];
+      : [];
 
   // Filter jobs based on Redux state
   const filteredJobs = useMemo(() => {

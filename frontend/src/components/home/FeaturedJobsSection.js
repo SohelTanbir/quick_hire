@@ -10,9 +10,7 @@ export default function FeaturedJobsSection() {
         ? jobsData
         : Array.isArray(jobsData?.data)
             ? jobsData.data
-            : Array.isArray(jobsData?.jobs)
-                ? jobsData.jobs
-                : [];
+            : [];
 
     const featuredJobs = jobs.slice(0, 8).map((job) => ({
         id: job._id,
