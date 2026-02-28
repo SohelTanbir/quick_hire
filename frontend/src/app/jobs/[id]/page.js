@@ -233,7 +233,7 @@ export default function JobDetailPage() {
                                     <div>
                                         <Link
                                             href={`/apply?jobId=${job._id}&jobTitle=${encodeURIComponent(job.title)}`}
-                                            className="block w-full px-6 py-4 bg-primary-600 hover:bg-primary-700 text-white rounded-lg transition-colors font-semibold text-lg mb-4 text-center"
+                                            className="block w-full px-8 py-3 bg-[#4640DE] hover:bg-primary-700 text-white rounded-lg transition-colors font-epilogue font-bold text-base leading-[160%] text-center mb-4"
                                         >
                                             Apply Now
                                         </Link>

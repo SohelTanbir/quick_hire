@@ -28,7 +28,7 @@ export default function EmployerCTASection() {
                         </p>
                         <Link
                             href="/employer/signup"
-                            className="inline-block bg-white text-primary-600 font-semibold px-8 py-4 rounded-lg hover:bg-gray-50 transition-colors"
+                            className="inline-block bg-[#4640DE] hover:bg-primary-700 text-white font-epilogue font-bold text-base leading-[160%] px-8 py-3 rounded-lg transition-colors"
                         >
                             Sign Up for free
                         </Link>

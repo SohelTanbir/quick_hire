@@ -24,14 +24,14 @@ export default function CTASection() {
                     <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
                         <Link
                             href="/register"
-                            className="px-8 py-4 bg-white text-primary-600 font-semibold rounded-lg hover:bg-gray-50 transition-all duration-300 flex items-center gap-2 group"
+                            className="px-8 py-3 bg-[#4640DE] text-white font-epilogue font-bold text-base leading-[160%] rounded-lg hover:bg-primary-700 transition-all duration-300 flex items-center gap-2 group"
                         >
                             Create Free Account
                             <FiArrowRight className="group-hover:translate-x-1 transition-transform" size={20} />
                         </Link>
                         <Link
                             href="/employers"
-                            className="px-8 py-4 bg-primary-700 text-white font-semibold rounded-lg hover:bg-primary-800 transition-all duration-300 border-2 border-white/30"
+                            className="px-8 py-3 bg-primary-700 text-white font-epilogue font-bold text-base leading-[160%] rounded-lg hover:bg-primary-800 transition-all duration-300 border-2 border-white/30"
                         >
                             Post a Job
                         </Link>

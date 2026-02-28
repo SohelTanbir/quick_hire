@@ -117,7 +117,7 @@ export default function Home() {
                         if (localLocation) params.set('location', localLocation);
                         router.push(`/jobs?${params.toString()}`);
                       }}
-                      className="bg-primary-600 hover:bg-primary-700 text-white font-medium px-8 py-3 rounded-md transition-colors whitespace-nowrap"
+                      className="bg-[#4640DE] hover:bg-primary-700 text-white font-epilogue font-bold text-base leading-[160%] px-8 py-3 rounded-md transition-colors whitespace-nowrap"
                     >
                       Search my job
                     </button>

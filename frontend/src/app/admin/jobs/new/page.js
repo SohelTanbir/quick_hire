@@ -281,13 +281,13 @@ export default function NewJobPage() {
                                 <button
                                     type="button"
                                     onClick={() => router.back()}
-                                    className="flex-1 px-6 py-3 border border-gray-300 text-gray-900 rounded-lg hover:bg-gray-50 transition-colors font-medium"
+                                    className="flex-1 px-6 py-3 border border-gray-300 text-gray-900 rounded-lg hover:bg-gray-50 transition-colors font-epilogue font-bold text-base leading-[160%]"
                                 >
                                     Cancel
                                 </button>
                                 <button
                                     type="submit"
-                                    className="flex-1 px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors font-medium"
+                                    className="flex-1 px-6 py-3 bg-[#4640DE] text-white rounded-lg hover:bg-primary-700 transition-colors font-epilogue font-bold text-base leading-[160%]"
                                 >
                                     Post Job
                                 </button>
