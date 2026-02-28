@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { FiFacebook, FiInstagram, FiLinkedin, FiTwitter, FiDribbble } from 'react-icons/fi';
 
 export default function Footer() {
@@ -15,16 +16,20 @@ export default function Footer() {
     };
 
     return (
-        <footer className="bg-[#1F2937] text-white py-16">
+        <footer className="bg-[#202430] text-white py-16">
             <div className="container mx-auto px-4">
                 {/* Main Footer Content */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12 mb-12">
                     {/* Brand Column */}
                     <div className="space-y-4">
                         <Link href="/" className="flex items-center gap-2 w-fit">
-                            <div className="w-10 h-10 bg-primary-600 rounded-lg flex items-center justify-center">
-                                <span className="text-white font-bold text-xl">Q</span>
-                            </div>
+                            <Image
+                                src="/assets/images/logo/Logo%201.png"
+                                alt="QuickHire Logo"
+                                width={40}
+                                height={40}
+                                className="rounded-lg"
+                            />
                             <span className="font-bold text-xl text-white">QuickHire</span>
                         </Link>
                         <p className="text-gray-300 text-sm leading-relaxed pr-4">

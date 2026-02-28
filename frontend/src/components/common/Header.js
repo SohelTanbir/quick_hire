@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
+import Image from 'next/image';
 import { FiMenu, FiX } from 'react-icons/fi';
 
 export default function Header() {
@@ -16,9 +17,13 @@ export default function Header() {
             <nav className="container mx-auto px-4 py-4 flex items-center justify-between">
                 {/* Logo */}
                 <Link href="/" className="flex items-center gap-2">
-                    <div className="w-8 h-8 bg-primary-600 rounded-md flex items-center justify-center">
-                        <span className="text-white font-bold text-lg">Q</span>
-                    </div>
+                    <Image
+                        src="/assets/images/logo/Logo%201.png"
+                        alt="QuickHire Logo"
+                        width={36}
+                        height={36}
+                        className="rounded-md"
+                    />
                     <span className="font-clash font-bold text-xl text-gray-900">
                         QuickHire
                     </span>

@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function EmployerCTASection() {
     return (
@@ -25,8 +26,19 @@ export default function EmployerCTASection() {
 
                     {/* Right Dashboard Mockup */}
                     <div className="hidden lg:block">
-                        <div className="bg-white rounded-2xl shadow-2xl p-6 h-80 flex items-center justify-center">
-                            <span className="text-gray-400 text-sm">Dashboard Mockup</span>
+                        <div className="bg-white rounded-2xl shadow-2xl p-4 h-80 relative overflow-hidden">
+                            <Image
+                                src="/assets/images/dashboard/dashboard-bg.png"
+                                alt="Dashboard Background"
+                                fill
+                                className="object-cover opacity-40"
+                            />
+                            <Image
+                                src="/assets/images/dashboard/dashboard-mokup.png"
+                                alt="Dashboard Mockup"
+                                fill
+                                className="object-contain p-4 relative z-10"
+                            />
                         </div>
                     </div>
                 </div>

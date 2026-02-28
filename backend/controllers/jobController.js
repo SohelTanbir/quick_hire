@@ -75,7 +75,7 @@ exports.getJobById = async (req, res) => {
 // Create a new job (Admin)
 exports.createJob = async (req, res) => {
     try {
-        const { title, company, location, category, description, salary, jobType, requirements } = req.body;
+        const { title, company, location, category, description, salary, jobType, requirements, responsibilities, companyDescription } = req.body;
 
         // Validate job data
         const { isValid, errors } = validateJobData(req.body);
@@ -97,6 +97,8 @@ exports.createJob = async (req, res) => {
             salary: salary || 'Competitive',
             jobType: jobType || 'Full-time',
             requirements: requirements || [],
+            responsibilities: responsibilities || [],
+            companyDescription: companyDescription || '',
         };
 
         const job = await Job.create(jobData);
@@ -138,6 +140,54 @@ exports.deleteJob = async (req, res) => {
         res.status(500).json({
             success: false,
             message: 'Error deleting job',
+            error: error.message,
+        });
+    }
+};
+
+// Update a job (Admin)
+exports.updateJob = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { title, company, location, category, description, salary, jobType, requirements, responsibilities, companyDescription } = req.body;
+
+        // Find the job first
+        const job = await Job.findById(id);
+
+        if (!job) {
+            return res.status(404).json({
+                success: false,
+                message: 'Job not found',
+            });
+        }
+
+        // Update job fields
+        const updateData = {};
+        if (title) updateData.title = title.trim();
+        if (company) updateData.company = company.trim();
+        if (location) updateData.location = location.trim();
+        if (category) updateData.category = category.trim();
+        if (description) updateData.description = description.trim();
+        if (salary) updateData.salary = salary;
+        if (jobType) updateData.jobType = jobType;
+        if (requirements) updateData.requirements = requirements;
+        if (responsibilities) updateData.responsibilities = responsibilities;
+        if (companyDescription !== undefined) updateData.companyDescription = companyDescription;
+
+        const updatedJob = await Job.findByIdAndUpdate(id, updateData, {
+            new: true,
+            runValidators: true,
+        });
+
+        res.status(200).json({
+            success: true,
+            message: 'Job updated successfully',
+            data: updatedJob,
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: 'Error updating job',
             error: error.message,
         });
     }

@@ -45,6 +45,27 @@ const jobSchema = new mongoose.Schema(
                 type: String,
             },
         ],
+        responsibilities: [
+            {
+                type: String,
+            },
+        ],
+        companyDescription: {
+            type: String,
+            default: '',
+        },
+        applicants: {
+            type: Number,
+            default: 0,
+        },
+        postedDate: {
+            type: String,
+            default: function () {
+                const now = new Date();
+                const daysAgo = Math.floor((Date.now() - this.createdAt) / (1000 * 60 * 60 * 24));
+                return daysAgo === 0 ? 'Today' : daysAgo === 1 ? 'Yesterday' : `${daysAgo} days ago`;
+            },
+        },
         createdAt: {
             type: Date,
             default: Date.now,

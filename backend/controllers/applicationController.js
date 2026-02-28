@@ -105,3 +105,46 @@ exports.getAllApplications = async (req, res) => {
         });
     }
 };
+
+// Update application status (Admin)
+exports.updateApplicationStatus = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { status } = req.body;
+
+        // Validate status
+        const validStatuses = ['Pending', 'Reviewed', 'Accepted', 'Rejected'];
+        if (!status || !validStatuses.includes(status)) {
+            return res.status(400).json({
+                success: false,
+                message: 'Invalid status. Must be one of: Pending, Reviewed, Accepted, Rejected',
+            });
+        }
+
+        // Find and update application
+        const application = await Application.findByIdAndUpdate(
+            id,
+            { status },
+            { new: true, runValidators: true }
+        ).populate('jobId', 'title company');
+
+        if (!application) {
+            return res.status(404).json({
+                success: false,
+                message: 'Application not found',
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            message: 'Application status updated successfully',
+            data: application,
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: 'Error updating application status',
+            error: error.message,
+        });
+    }
+};
