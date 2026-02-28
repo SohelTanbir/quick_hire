@@ -112,7 +112,7 @@ export default function Home() {
                         className="flex-1 outline-none bg-transparent text-gray-900 placeholder-gray-400"
                       />
                     </div>
-                    <button 
+                    <button
                       onClick={() => {
                         const params = new URLSearchParams();
                         if (localSearch) params.set('search', localSearch);
@@ -130,8 +130,8 @@ export default function Home() {
                 <div className="flex flex-wrap items-center gap-2">
                   <span className="text-gray-600 text-sm">Popular:</span>
                   {['UI Designer', 'UX Researcher', 'Android', 'Admin'].map((tag) => (
-                    <button 
-                      key={tag} 
+                    <button
+                      key={tag}
                       onClick={() => {
                         setLocalSearch(tag);
                         router.push(`/jobs?search=${encodeURIComponent(tag)}`);

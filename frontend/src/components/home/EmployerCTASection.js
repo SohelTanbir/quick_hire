@@ -14,7 +14,7 @@ export default function EmployerCTASection() {
                 className="object-cover"
                 priority
             />
-            
+
             {/* Content Overlay */}
             <div className="container mx-auto px-4 relative z-10">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">

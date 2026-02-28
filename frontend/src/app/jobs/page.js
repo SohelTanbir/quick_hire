@@ -26,7 +26,7 @@ export default function JobsPage() {
         const categoryParam = searchParams.get('category');
         const searchParam = searchParams.get('search');
         const locationParam = searchParams.get('location');
-        
+
         if (categoryParam) {
             setSelectedCategory(categoryParam);
             setShowFilters(true);
