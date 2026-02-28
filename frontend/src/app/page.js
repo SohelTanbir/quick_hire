@@ -3,6 +3,7 @@
 import { useState, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Link from 'next/link';
+import Image from 'next/image';
 import Header from '@/components/common/Header';
 import Footer from '@/components/common/Footer';
 import CategoriesSection from '@/components/home/CategoriesSection';
@@ -28,9 +29,11 @@ export default function Home() {
   // Ensure jobs is always an array
   const jobs = Array.isArray(jobsData)
     ? jobsData
-    : Array.isArray(jobsData?.jobs)
-      ? jobsData.jobs
-      : [];
+    : Array.isArray(jobsData?.data)
+      ? jobsData.data
+      : Array.isArray(jobsData?.jobs)
+        ? jobsData.jobs
+        : [];
 
   // Filter jobs based on Redux state
   const filteredJobs = useMemo(() => {
@@ -54,12 +57,12 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-900">
+    <div className="min-h-screen bg-white">
       <Header />
 
       <main>
         {/* Hero Section */}
-        <section className="bg-linear-to-b from-blue-50 to-white pt-16 pb-12">
+        <section className="bg-[#F8F8FD] pt-16 pb-12">
           <div className="container mx-auto px-4">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
               {/* Left Content */}
@@ -67,10 +70,10 @@ export default function Home() {
                 <h1 className="font-clash text-5xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight">
                   Discover<br />
                   more than<br />
-                  <span className="text-primary-600 relative inline-block">
+                  <span className="text-[#4640DE] relative inline-block">
                     5000+ Jobs
                     <svg className="absolute -bottom-2 left-0 w-full" height="8" viewBox="0 0 300 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M1 6C50 2 100 1 150 3C200 5 250 6 299 4" stroke="#4F46E5" strokeWidth="3" strokeLinecap="round" />
+                      <path d="M1 6C50 2 100 1 150 3C200 5 250 6 299 4" stroke="#4640DE" strokeWidth="3" strokeLinecap="round" />
                     </svg>
                   </span>
                 </h1>
@@ -125,8 +128,13 @@ export default function Home() {
               <div className="hidden lg:block">
                 <div className="relative">
                   <div className="absolute inset-0 bg-primary-100 rounded-3xl transform rotate-6"></div>
-                  <div className="relative bg-gray-200 rounded-3xl h-96 flex items-center justify-center">
-                    <span className="text-gray-400 text-sm">Hero Image Placeholder</span>
+                  <div className="relative bg-white rounded-3xl h-96 overflow-hidden border border-gray-200 shadow-lg">
+                    <Image
+                      src="/assets/images/hero/hero-man.png"
+                      alt="Job seeker hero"
+                      fill
+                      className="object-cover"
+                    />
                   </div>
                 </div>
               </div>
@@ -135,12 +143,17 @@ export default function Home() {
             {/* Company Logos */}
             <div className="mt-16">
               <p className="text-gray-500 text-sm mb-6">Companies we helped grow</p>
-              <div className="flex flex-wrap items-center gap-8 opacity-60">
-                <div className="text-gray-400 font-semibold text-xl">vodafone</div>
-                <div className="text-gray-400 font-semibold text-xl">intel</div>
-                <div className="text-gray-400 font-semibold text-xl tracking-wider">TESLA</div>
-                <div className="text-gray-400 font-semibold text-xl">AMD</div>
-                <div className="text-gray-400 font-semibold text-xl">Talkit</div>
+              <div className="flex flex-wrap items-center gap-8 opacity-80">
+                {Array.from({ length: 5 }).map((_, idx) => (
+                  <Image
+                    key={idx}
+                    src="/assets/images/logo/Logo%201.png"
+                    alt={`Company logo ${idx + 1}`}
+                    width={38}
+                    height={38}
+                    className="rounded-md"
+                  />
+                ))}
               </div>
             </div>
           </div>
