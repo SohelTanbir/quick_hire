@@ -1,78 +1,82 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Header from '@/components/common/Header';
 import Footer from '@/components/common/Footer';
-import { FiBarChart3, FiFileText, FiUsers, FiTrendingUp, FiPlus, FiEdit2, FiTrash2, FiEye } from 'react-icons/fi';
+import {
+    useDeleteJobMutation,
+    useGetApplicationsQuery,
+    useGetJobsQuery,
+    useUpdateApplicationStatusMutation,
+} from '@/store/services/api';
+import { FiFileText, FiUsers, FiTrendingUp, FiPlus, FiEdit2, FiTrash2, FiEye } from 'react-icons/fi';
 
 export default function AdminDashboard() {
+    const router = useRouter();
     const [activeTab, setActiveTab] = useState('overview');
+    const { data: jobsResponse, isLoading: jobsLoading } = useGetJobsQuery();
+    const { data: applicationsResponse, isLoading: applicationsLoading } = useGetApplicationsQuery();
+    const [deleteJob, { isLoading: isDeleting }] = useDeleteJobMutation();
+    const [updateApplicationStatus, { isLoading: isUpdatingStatus }] = useUpdateApplicationStatusMutation();
 
-    // Mock data
+    const jobs = Array.isArray(jobsResponse?.data) ? jobsResponse.data : [];
+    const applications = Array.isArray(applicationsResponse?.data) ? applicationsResponse.data : [];
+
+    const applicationsByJob = applications.reduce((acc, app) => {
+        const key = app.jobId?._id || app.jobId;
+        if (!key) return acc;
+        acc[key] = (acc[key] || 0) + 1;
+        return acc;
+    }, {});
+
+    const statusCounts = applications.reduce(
+        (acc, app) => {
+            acc[app.status] = (acc[app.status] || 0) + 1;
+            return acc;
+        },
+        { Pending: 0, Reviewed: 0, Accepted: 0, Rejected: 0 }
+    );
+
     const stats = [
-        { label: 'Active Jobs', value: '8', icon: FiFileText, color: 'bg-blue-50 text-blue-600' },
-        { label: 'Total Applications', value: '142', icon: FiUsers, color: 'bg-green-50 text-green-600' },
-        { label: 'Profile Views', value: '3,421', icon: FiEye, color: 'bg-purple-50 text-purple-600' },
-        { label: 'Monthly Earnings', value: '$2,450', icon: FiTrendingUp, color: 'bg-orange-50 text-orange-600' },
-    ];
-
-    const postedJobs = [
+        { label: 'Active Jobs', value: jobs.length, icon: FiFileText, color: 'bg-blue-50 text-blue-600' },
+        { label: 'Total Applications', value: applications.length, icon: FiUsers, color: 'bg-green-50 text-green-600' },
+        { label: 'Pending Reviews', value: statusCounts.Pending, icon: FiEye, color: 'bg-purple-50 text-purple-600' },
         {
-            id: 1,
-            title: 'Senior Product Designer',
-            company: 'TechCorp',
-            applications: 28,
-            views: 1250,
-            status: 'Active',
-            date: '2024-02-15',
-        },
-        {
-            id: 2,
-            title: 'Full Stack Developer',
-            company: 'StartupX',
-            applications: 42,
-            views: 2100,
-            status: 'Active',
-            date: '2024-02-10',
-        },
-        {
-            id: 3,
-            title: 'UX Research Lead',
-            company: 'DesignHouse',
-            applications: 15,
-            views: 850,
-            status: 'Active',
-            date: '2024-02-05',
+            label: 'Accepted Candidates',
+            value: statusCounts.Accepted,
+            icon: FiTrendingUp,
+            color: 'bg-orange-50 text-orange-600',
         },
     ];
 
-    const recentApplications = [
-        {
-            id: 1,
-            candidateName: 'Sarah Johnson',
-            jobTitle: 'Senior Product Designer',
-            status: 'Pending',
-            date: '2024-02-27',
-            rating: 4.5,
-        },
-        {
-            id: 2,
-            candidateName: 'Michael Chen',
-            jobTitle: 'Full Stack Developer',
-            status: 'Reviewed',
-            date: '2024-02-26',
-            rating: 4.8,
-        },
-        {
-            id: 3,
-            candidateName: 'Emma Williams',
-            jobTitle: 'UX Research Lead',
-            status: 'Interview',
-            date: '2024-02-25',
-            rating: 4.2,
-        },
-    ];
+    const recentJobs = [...jobs].slice(0, 5);
+    const recentApplications = [...applications].slice(0, 8);
+
+    const handleDeleteJob = async (id) => {
+        if (!window.confirm('Are you sure you want to delete this job listing?')) {
+            return;
+        }
+
+        try {
+            await deleteJob(id).unwrap();
+        } catch (error) {
+            console.error('Failed to delete job', error);
+            window.alert('Failed to delete job. Please try again.');
+        }
+    };
+
+    const handleStatusChange = async (id, status) => {
+        try {
+            await updateApplicationStatus({ id, status }).unwrap();
+        } catch (error) {
+            console.error('Failed to update application status', error);
+            window.alert('Failed to update status. Please try again.');
+        }
+    };
+
+    const loading = jobsLoading || applicationsLoading;
 
     return (
         <>
@@ -109,7 +113,7 @@ export default function AdminDashboard() {
                                         <Icon size={24} />
                                     </div>
                                     <p className="text-gray-600 text-sm mb-1">{stat.label}</p>
-                                    <p className="font-clash text-3xl font-bold text-gray-900">{stat.value}</p>
+                                    <p className="font-clash text-3xl font-bold text-gray-900">{loading ? '-' : stat.value}</p>
                                 </div>
                             );
                         })}
@@ -120,8 +124,8 @@ export default function AdminDashboard() {
                         <button
                             onClick={() => setActiveTab('overview')}
                             className={`px-6 py-3 font-medium border-b-2 transition ${activeTab === 'overview'
-                                    ? 'text-primary-600 border-primary-600'
-                                    : 'text-gray-600 border-transparent hover:text-gray-900'
+                                ? 'text-primary-600 border-primary-600'
+                                : 'text-gray-600 border-transparent hover:text-gray-900'
                                 }`}
                         >
                             Overview
@@ -129,8 +133,8 @@ export default function AdminDashboard() {
                         <button
                             onClick={() => setActiveTab('jobs')}
                             className={`px-6 py-3 font-medium border-b-2 transition ${activeTab === 'jobs'
-                                    ? 'text-primary-600 border-primary-600'
-                                    : 'text-gray-600 border-transparent hover:text-gray-900'
+                                ? 'text-primary-600 border-primary-600'
+                                : 'text-gray-600 border-transparent hover:text-gray-900'
                                 }`}
                         >
                             My Jobs
@@ -138,8 +142,8 @@ export default function AdminDashboard() {
                         <button
                             onClick={() => setActiveTab('applications')}
                             className={`px-6 py-3 font-medium border-b-2 transition ${activeTab === 'applications'
-                                    ? 'text-primary-600 border-primary-600'
-                                    : 'text-gray-600 border-transparent hover:text-gray-900'
+                                ? 'text-primary-600 border-primary-600'
+                                : 'text-gray-600 border-transparent hover:text-gray-900'
                                 }`}
                         >
                             Applications
@@ -153,29 +157,41 @@ export default function AdminDashboard() {
                             <div className="lg:col-span-2 bg-white rounded-xl shadow-sm p-8 border border-gray-200">
                                 <h2 className="font-epilogue font-semibold text-xl text-gray-900 mb-6">Recent Job Postings</h2>
                                 <div className="space-y-4">
-                                    {postedJobs.map((job) => (
-                                        <div key={job.id} className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition">
-                                            <div className="flex-1">
-                                                <h3 className="font-semibold text-gray-900 mb-1">{job.title}</h3>
-                                                <p className="text-sm text-gray-600 mb-2">{job.company}</p>
-                                                <div className="flex gap-4 text-xs text-gray-600">
-                                                    <span>{job.applications} applications</span>
-                                                    <span>{job.views} views</span>
+                                    {loading ? (
+                                        <p className="text-sm text-gray-500">Loading jobs...</p>
+                                    ) : recentJobs.length === 0 ? (
+                                        <p className="text-sm text-gray-500">No jobs posted yet.</p>
+                                    ) : (
+                                        recentJobs.map((job) => (
+                                            <div key={job._id} className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition">
+                                                <div className="flex-1">
+                                                    <h3 className="font-semibold text-gray-900 mb-1">{job.title}</h3>
+                                                    <p className="text-sm text-gray-600 mb-2">{job.company} · {job.location}</p>
+                                                    <div className="flex gap-4 text-xs text-gray-600">
+                                                        <span>{applicationsByJob[job._id] || 0} applications</span>
+                                                        <span>{job.jobType}</span>
+                                                    </div>
+                                                </div>
+                                                <div className="flex items-center gap-2">
+                                                    <span className="px-3 py-1 bg-green-50 text-green-700 text-xs font-medium rounded-full">
+                                                        Active
+                                                    </span>
+                                                    <button
+                                                        onClick={() => router.push(`/admin/jobs/${job._id}`)}
+                                                        className="p-2 hover:bg-gray-200 rounded-lg transition"
+                                                    >
+                                                        <FiEdit2 className="text-gray-600" size={18} />
+                                                    </button>
+                                                    <button
+                                                        onClick={() => handleDeleteJob(job._id)}
+                                                        disabled={isDeleting}
+                                                        className="p-2 hover:bg-gray-200 rounded-lg transition disabled:opacity-50"
+                                                    >
+                                                        <FiTrash2 className="text-gray-600" size={18} />
+                                                    </button>
                                                 </div>
                                             </div>
-                                            <div className="flex items-center gap-2">
-                                                <span className="px-3 py-1 bg-green-50 text-green-700 text-xs font-medium rounded-full">
-                                                    {job.status}
-                                                </span>
-                                                <button className="p-2 hover:bg-gray-200 rounded-lg transition">
-                                                    <FiEdit2 className="text-gray-600" size={18} />
-                                                </button>
-                                                <button className="p-2 hover:bg-gray-200 rounded-lg transition">
-                                                    <FiTrash2 className="text-gray-600" size={18} />
-                                                </button>
-                                            </div>
-                                        </div>
-                                    ))}
+                                        )))}
                                 </div>
                             </div>
 
@@ -193,9 +209,18 @@ export default function AdminDashboard() {
                                     <div>
                                         <p className="text-sm text-gray-600 mb-2">Job Response Rate</p>
                                         <div className="w-full bg-gray-200 rounded-full h-2">
-                                            <div className="bg-green-600 h-2 rounded-full" style={{ width: '72%' }}></div>
+                                            <div
+                                                className="bg-green-600 h-2 rounded-full"
+                                                style={{
+                                                    width: `${applications.length ? Math.min(100, Math.round((statusCounts.Reviewed + statusCounts.Accepted) / applications.length * 100)) : 0}%`,
+                                                }}
+                                            ></div>
                                         </div>
-                                        <p className="text-xs text-gray-500 mt-1">72%</p>
+                                        <p className="text-xs text-gray-500 mt-1">
+                                            {applications.length
+                                                ? `${Math.round((statusCounts.Reviewed + statusCounts.Accepted) / applications.length * 100)}%`
+                                                : '0%'}
+                                        </p>
                                     </div>
                                     <div className="pt-4 border-t border-gray-200">
                                         <p className="text-sm text-gray-600 mb-2">Member Since</p>
@@ -221,27 +246,42 @@ export default function AdminDashboard() {
                                         <tr className="border-b border-gray-200">
                                             <th className="text-left py-4 text-sm font-semibold text-gray-900">Job Title</th>
                                             <th className="text-left py-4 text-sm font-semibold text-gray-900">Applications</th>
-                                            <th className="text-left py-4 text-sm font-semibold text-gray-900">Views</th>
+                                            <th className="text-left py-4 text-sm font-semibold text-gray-900">Job Type</th>
                                             <th className="text-left py-4 text-sm font-semibold text-gray-900">Status</th>
                                             <th className="text-left py-4 text-sm font-semibold text-gray-900">Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {postedJobs.map((job) => (
-                                            <tr key={job.id} className="border-b border-gray-200 hover:bg-gray-50 transition">
+                                        {loading ? (
+                                            <tr>
+                                                <td colSpan={5} className="py-6 text-sm text-gray-500">Loading job listings...</td>
+                                            </tr>
+                                        ) : jobs.length === 0 ? (
+                                            <tr>
+                                                <td colSpan={5} className="py-6 text-sm text-gray-500">No jobs available.</td>
+                                            </tr>
+                                        ) : jobs.map((job) => (
+                                            <tr key={job._id} className="border-b border-gray-200 hover:bg-gray-50 transition">
                                                 <td className="py-4 text-gray-900 font-medium">{job.title}</td>
-                                                <td className="py-4 text-gray-600">{job.applications}</td>
-                                                <td className="py-4 text-gray-600">{job.views}</td>
+                                                <td className="py-4 text-gray-600">{applicationsByJob[job._id] || 0}</td>
+                                                <td className="py-4 text-gray-600">{job.jobType}</td>
                                                 <td className="py-4">
                                                     <span className="px-3 py-1 bg-green-50 text-green-700 text-xs font-medium rounded-full">
-                                                        {job.status}
+                                                        Active
                                                     </span>
                                                 </td>
                                                 <td className="py-4 flex gap-2">
-                                                    <button className="p-2 hover:bg-gray-200 rounded-lg transition">
+                                                    <button
+                                                        onClick={() => router.push(`/admin/jobs/${job._id}`)}
+                                                        className="p-2 hover:bg-gray-200 rounded-lg transition"
+                                                    >
                                                         <FiEdit2 className="text-gray-600" size={18} />
                                                     </button>
-                                                    <button className="p-2 hover:bg-gray-200 rounded-lg transition">
+                                                    <button
+                                                        onClick={() => handleDeleteJob(job._id)}
+                                                        disabled={isDeleting}
+                                                        className="p-2 hover:bg-gray-200 rounded-lg transition disabled:opacity-50"
+                                                    >
                                                         <FiTrash2 className="text-gray-600" size={18} />
                                                     </button>
                                                 </td>
@@ -257,34 +297,44 @@ export default function AdminDashboard() {
                         <div className="bg-white rounded-xl shadow-sm p-8 border border-gray-200">
                             <h2 className="font-epilogue font-semibold text-xl text-gray-900 mb-6">Recent Applications</h2>
                             <div className="space-y-4">
-                                {recentApplications.map((app) => (
+                                {loading ? (
+                                    <p className="text-sm text-gray-500">Loading applications...</p>
+                                ) : recentApplications.length === 0 ? (
+                                    <p className="text-sm text-gray-500">No applications found.</p>
+                                ) : recentApplications.map((app) => (
                                     <div
-                                        key={app.id}
+                                        key={app._id}
                                         className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition"
                                     >
                                         <div className="flex-1">
-                                            <h3 className="font-semibold text-gray-900 mb-1">{app.candidateName}</h3>
-                                            <p className="text-sm text-gray-600 mb-2">{app.jobTitle}</p>
-                                            <p className="text-xs text-gray-500">{app.date}</p>
+                                            <h3 className="font-semibold text-gray-900 mb-1">{app.name}</h3>
+                                            <p className="text-sm text-gray-600 mb-2">{app.jobId?.title || 'Unknown Role'}</p>
+                                            <p className="text-xs text-gray-500">{new Date(app.createdAt).toLocaleDateString()}</p>
                                         </div>
                                         <div className="flex items-center gap-4">
-                                            <div className="text-right">
-                                                <p className="text-sm font-semibold text-gray-900">{app.rating}</p>
-                                                <p className="text-xs text-gray-500">★★★★★</p>
-                                            </div>
                                             <span
                                                 className={`px-3 py-1 text-xs font-medium rounded-full ${app.status === 'Pending'
-                                                        ? 'bg-yellow-50 text-yellow-700'
-                                                        : app.status === 'Reviewed'
-                                                            ? 'bg-blue-50 text-blue-700'
-                                                            : 'bg-purple-50 text-purple-700'
+                                                    ? 'bg-yellow-50 text-yellow-700'
+                                                    : app.status === 'Reviewed'
+                                                        ? 'bg-blue-50 text-blue-700'
+                                                        : app.status === 'Accepted'
+                                                            ? 'bg-green-50 text-green-700'
+                                                            : 'bg-red-50 text-red-700'
                                                     }`}
                                             >
                                                 {app.status}
                                             </span>
-                                            <button className="px-4 py-2 border border-gray-300 text-gray-900 rounded-lg hover:bg-gray-50 transition-colors text-sm font-medium">
-                                                Review
-                                            </button>
+                                            <select
+                                                value={app.status}
+                                                onChange={(e) => handleStatusChange(app._id, e.target.value)}
+                                                disabled={isUpdatingStatus}
+                                                className="px-3 py-2 border border-gray-300 text-gray-900 rounded-lg text-sm"
+                                            >
+                                                <option value="Pending">Pending</option>
+                                                <option value="Reviewed">Reviewed</option>
+                                                <option value="Accepted">Accepted</option>
+                                                <option value="Rejected">Rejected</option>
+                                            </select>
                                         </div>
                                     </div>
                                 ))}

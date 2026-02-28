@@ -76,6 +76,22 @@ export const api = createApi({
                 }
             },
         }),
+        updateJob: builder.mutation({
+            query: ({ id, ...jobData }) => ({
+                url: `/jobs/${id}`,
+                method: 'PUT',
+                body: jobData,
+            }),
+            invalidatesTags: (result, error, arg) => ['Jobs', { type: 'Jobs', id: arg.id }],
+            onQueryStarted: async (arg, { queryFulfilled }) => {
+                try {
+                    await queryFulfilled;
+                    console.log('Job updated successfully');
+                } catch (error) {
+                    console.error('Failed to update job:', error);
+                }
+            },
+        }),
         deleteJob: builder.mutation({
             query: (id) => ({
                 url: `/jobs/${id}`,
@@ -117,6 +133,22 @@ export const api = createApi({
             query: (jobId) => `/applications/job/${jobId}`,
             providesTags: (result, error, jobId) => [{ type: 'Applications', id: jobId }],
         }),
+        updateApplicationStatus: builder.mutation({
+            query: ({ id, status }) => ({
+                url: `/applications/${id}/status`,
+                method: 'PATCH',
+                body: { status },
+            }),
+            invalidatesTags: ['Applications'],
+            onQueryStarted: async (arg, { queryFulfilled }) => {
+                try {
+                    await queryFulfilled;
+                    console.log('Application status updated successfully');
+                } catch (error) {
+                    console.error('Failed to update application status:', error);
+                }
+            },
+        }),
     }),
 });
 
@@ -124,8 +156,10 @@ export const {
     useGetJobsQuery,
     useGetJobByIdQuery,
     useCreateJobMutation,
+    useUpdateJobMutation,
     useDeleteJobMutation,
     useSubmitApplicationMutation,
     useGetApplicationsQuery,
     useGetApplicationsByJobQuery,
+    useUpdateApplicationStatusMutation,
 } = api;

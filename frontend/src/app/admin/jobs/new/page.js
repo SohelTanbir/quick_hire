@@ -2,10 +2,10 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
 import Header from '@/components/common/Header';
 import Footer from '@/components/common/Footer';
 import { FiArrowLeft, FiPlus, FiX } from 'react-icons/fi';
+import { useCreateJobMutation } from '@/store/services/api';
 
 const LoadingSpinner = () => (
     <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
@@ -13,30 +13,34 @@ const LoadingSpinner = () => (
 
 export default function NewJobPage() {
     const router = useRouter();
+    const [createJob] = useCreateJobMutation();
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [submitError, setSubmitError] = useState('');
     const [formData, setFormData] = useState({
         title: '',
+        company: '',
         location: '',
-        jobType: 'Full time',
+        jobType: 'Full-time',
         salary: '',
-        category: 'Development',
+        category: 'Technology',
         description: '',
         requirements: [''],
         responsibilities: [''],
+        companyDescription: '',
     });
 
     const categories = [
-        'Development',
         'Design',
+        'Sales',
         'Marketing',
         'Finance',
-        'Sales',
-        'Product',
-        'HR',
-        'Operations',
+        'Technology',
+        'Engineering',
+        'Business',
+        'Human Resources',
     ];
 
-    const jobTypes = ['Full time', 'Part time', 'Contract', 'Temporary', 'Freelance'];
+    const jobTypes = ['Full-time', 'Part-time', 'Contract', 'Internship'];
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -70,11 +74,26 @@ export default function NewJobPage() {
         }));
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        // TODO: Send form data to API
-        console.log('Form submitted:', formData);
-        router.push('/admin');
+        setIsSubmitting(true);
+        setSubmitError('');
+
+        const cleanedPayload = {
+            ...formData,
+            requirements: formData.requirements.map((item) => item.trim()).filter(Boolean),
+            responsibilities: formData.responsibilities.map((item) => item.trim()).filter(Boolean),
+        };
+
+        try {
+            await createJob(cleanedPayload).unwrap();
+            router.push('/admin');
+        } catch (error) {
+            const message = error?.data?.message || 'Failed to create job. Please try again.';
+            setSubmitError(message);
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     return (
@@ -112,6 +131,22 @@ export default function NewJobPage() {
                                             value={formData.title}
                                             onChange={handleInputChange}
                                             placeholder="e.g., Senior Product Designer"
+                                            required
+                                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                                        />
+                                    </div>
+
+                                    {/* Company Name */}
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-900 mb-2">
+                                            Company Name *
+                                        </label>
+                                        <input
+                                            type="text"
+                                            name="company"
+                                            value={formData.company}
+                                            onChange={handleInputChange}
+                                            placeholder="e.g., QuickHire Labs"
                                             required
                                             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                                         />
@@ -191,7 +226,7 @@ export default function NewJobPage() {
                             {/* Job Description */}
                             <div className="border-t border-gray-200 pt-8">
                                 <h2 className="font-epilogue font-semibold text-xl text-gray-900 mb-6">Job Description</h2>
-                                <div>
+                                <div className="space-y-6">
                                     <label className="block text-sm font-medium text-gray-900 mb-2">
                                         Description *
                                     </label>
@@ -204,6 +239,20 @@ export default function NewJobPage() {
                                         rows={8}
                                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                                     />
+
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-900 mb-2">
+                                            Company Description (Optional)
+                                        </label>
+                                        <textarea
+                                            name="companyDescription"
+                                            value={formData.companyDescription}
+                                            onChange={handleInputChange}
+                                            placeholder="Briefly describe your company..."
+                                            rows={4}
+                                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                                        />
+                                    </div>
                                 </div>
                             </div>
 
@@ -283,6 +332,9 @@ export default function NewJobPage() {
 
                             {/* Form Actions */}
                             <div className="border-t border-gray-200 pt-8 flex gap-4">
+                                {submitError && (
+                                    <p className="w-full text-sm text-red-600 -mt-2 mb-2">{submitError}</p>
+                                )}
                                 <button
                                     type="button"
                                     onClick={() => router.back()}
