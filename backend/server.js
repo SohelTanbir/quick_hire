@@ -9,8 +9,25 @@ const applicationRoutes = require('./routes/applications');
 
 const app = express();
 
-// Connect to MongoDB
-connectDB();
+// Connect to MongoDB (only for local development)
+// In Vercel, connection will be lazy-loaded per request
+if (!process.env.VERCEL) {
+    connectDB();
+}
+
+// Middleware to ensure DB connection in serverless
+app.use(async (req, res, next) => {
+    try {
+        await connectDB();
+        next();
+    } catch (error) {
+        console.error('Database connection error:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Database connection failed',
+        });
+    }
+});
 
 // Middleware
 app.use(
@@ -57,16 +74,22 @@ app.use((err, req, res, next) => {
 // Start server
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
-    console.log(`✅ Backend server is running on http://localhost:${PORT}`);
-    console.log(`📌 API health check: http://localhost:${PORT}/api/health`);
-    console.log(`📌 Jobs endpoint: http://localhost:${PORT}/api/jobs`);
-    console.log(
-        `📌 Applications endpoint: http://localhost:${PORT}/api/applications`
-    );
-});
+// Only start server if not in Vercel environment
+if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
+    app.listen(PORT, () => {
+        console.log(`✅ Backend server is running on http://localhost:${PORT}`);
+        console.log(`📌 API health check: http://localhost:${PORT}/api/health`);
+        console.log(`📌 Jobs endpoint: http://localhost:${PORT}/api/jobs`);
+        console.log(
+            `📌 Applications endpoint: http://localhost:${PORT}/api/applications`
+        );
+    });
 
-process.on('unhandledRejection', (err) => {
-    console.error('Unhandled Rejection:', err);
-    process.exit(1);
-});
+    process.on('unhandledRejection', (err) => {
+        console.error('Unhandled Rejection:', err);
+        process.exit(1);
+    });
+}
+
+// Export for Vercel
+module.exports = app;
